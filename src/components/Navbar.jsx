@@ -8,32 +8,33 @@ function Navbar() {
         <div className="navbar-inner">
           <img src={logo} alt="Codeforces" className="logo-img" />
         </div>
+
         <div className="navbar-auth">
           <img src={flagImg} alt="flags" className="flag-img" />
           <div className="auth-links">
-            <a href="#">Enter</a>
+            <a href="https://codeforces.com/enter" target="_blank" rel="noreferrer">Enter</a>
             <span> | </span>
-            <a href="#">Register</a>
+            <a href="https://codeforces.com/register" target="_blank" rel="noreferrer">Register</a>
           </div>
         </div>
       </div>
 
       <div className="navbar-links-bar">
         <ul className="navbar-links">
-          <li><a href="#">HOME</a></li>
-          <li><a href="#">TOP</a></li>
-          <li><a href="#">CATALOG</a></li>
-          <li><a href="#">CONTESTS</a></li>
-          <li><a href="#">GYM</a></li>
-          <li><a href="#">PROBLEMSET</a></li>
-          <li><a href="#">GROUPS</a></li>
-          <li><a href="#">RATING</a></li>
-          <li><a href="#">EDU</a></li>
-          <li><a href="#">API</a></li>
-          <li><a href="#">CALENDAR</a></li>
-          <li><a href="#">HELP</a></li>
+          <li><a href="https://codeforces.com" target="_blank" rel="noreferrer">HOME</a></li>
+          <li><a href="https://codeforces.com/top" target="_blank" rel="noreferrer">TOP</a></li>
+          <li><a href="https://codeforces.com/catalog" target="_blank" rel="noreferrer">CATALOG</a></li>
+          <li><a href="https://codeforces.com/contests" target="_blank" rel="noreferrer">CONTESTS</a></li>
+          <li><a href="https://codeforces.com/gyms" target="_blank" rel="noreferrer">GYM</a></li>
+          <li><a href="https://codeforces.com/problemset" target="_blank" rel="noreferrer">PROBLEMSET</a></li>
+          <li><a href="https://codeforces.com/groups" target="_blank" rel="noreferrer">GROUPS</a></li>
+          <li><a href="https://codeforces.com/ratings" target="_blank" rel="noreferrer">RATING</a></li>
+          <li><a href="https://codeforces.com/edu/courses" target="_blank" rel="noreferrer">EDU</a></li>
+          <li><a href="https://codeforces.com/apiHelp" target="_blank" rel="noreferrer">API</a></li>
+          <li><a href="https://codeforces.com/calendar" target="_blank" rel="noreferrer">CALENDAR</a></li>
+          <li><a href="https://codeforces.com/help" target="_blank" rel="noreferrer">HELP</a></li>
         </ul>
-        <input  placeholder="🔍" type="text" className="search-box"  />
+        <input placeholder="" type="text" className="search-box" />
       </div>
     </nav>
   );
