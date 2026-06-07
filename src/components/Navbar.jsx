@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import flagImg from "../assets/flag.png";
 
@@ -21,9 +22,9 @@ function Navbar() {
 
       <div className="navbar-links-bar">
         <ul className="navbar-links">
-          <li><a href="https://codeforces.com" target="_blank" rel="noreferrer">HOME</a></li>
-          <li><a href="https://codeforces.com/top" target="_blank" rel="noreferrer">TOP</a></li>
-          <li><a href="https://codeforces.com/catalog" target="_blank" rel="noreferrer">CATALOG</a></li>
+          <li><Link to="/">HOME</Link></li>
+          <li><Link to="/top">TOP</Link></li>
+          <li><Link to="/catalog">CATALOG</Link></li>
           <li><a href="https://codeforces.com/contests" target="_blank" rel="noreferrer">CONTESTS</a></li>
           <li><a href="https://codeforces.com/gyms" target="_blank" rel="noreferrer">GYM</a></li>
           <li><a href="https://codeforces.com/problemset" target="_blank" rel="noreferrer">PROBLEMSET</a></li>

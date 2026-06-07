@@ -678,3 +678,28 @@ a:visited {
     white-space: normal;
   }
 }
+.catalog-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 285px;
+  gap: 28px;
+  align-items: start;
+}
+
+.catalog-history {
+  width: 285px;
+}
+
+.history-content {
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.22;
+}
+
+.history-content p {
+  margin: 0 0 14px;
+}
+
+.green {
+  background: #b6ff9b;
+  color: #008000;
+}

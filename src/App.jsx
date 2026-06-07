@@ -1,19 +1,17 @@
-import Navbar from "./components/Navbar";
-import BlogFeed from "./components/BlogFeed";
-import Sidebar from "./components/Sidebar";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import TopPage from "./pages/TopPage";
+import CatalogPage from "./pages/CatalogPage";
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <div className="container">
-        <div className="main-layout">
-          <BlogFeed />
-          <Sidebar />
-        </div>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/top" element={<TopPage />} />
+        <Route path="/catalog" element={<CatalogPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

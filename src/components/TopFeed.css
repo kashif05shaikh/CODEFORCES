@@ -1,0 +1,341 @@
+/* ════════════════════════════════════════════════════
+   TopFeed.css — pixel-matched to codeforces.com/top
+   ════════════════════════════════════════════════════ */
+
+.tf-feed {
+  font-family: Arial, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* ── Tabs ─────────────────────────────────────────── */
+.tf-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0;
+}
+
+.tf-tab {
+  padding: 5px 14px 4px;
+  border: 1px solid transparent;
+  border-bottom: none;
+  background: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: normal;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 3px 3px 0 0;
+  transition: color 0.1s;
+  margin-bottom: -1px;
+}
+
+.tf-tab:hover {
+  color: #333;
+  background: #f4f4f4;
+  border-color: #ccc;
+}
+
+.tf-tab.active {
+  color: #222;
+  background: #fff;
+  border-color: #ccc;
+  font-weight: bold;
+}
+
+/* ── Section heading ──────────────────────────────── */
+.tf-section-title {
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin: 0 0 16px;
+}
+
+/* ══════════════════════════════════════════════════
+   BLOG CARD
+   ══════════════════════════════════════════════════ */
+.tf-blog-card {
+  margin-bottom: 20px;
+  padding-bottom: 4px;
+  border-bottom: 1px dotted #d8d8d8;
+}
+.tf-blog-card:last-child {
+  border-bottom: none;
+}
+
+/* Title — CF exact: ~22px, not bold, teal-blue #276 */
+.tf-blog-title {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: normal;
+  line-height: 1.25;
+}
+
+.tf-blog-title a {
+  color: #276;
+  text-decoration: none;
+}
+.tf-blog-title a:hover { text-decoration: underline; }
+
+/* "By [handle], [tag,] X ago" */
+.tf-blog-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
+
+.tf-by { margin-right: 4px; color: #888; }
+.tf-meta-item { display: inline-flex; align-items: center; }
+.tf-meta-sep { color: #888; margin: 0 3px; }
+.tf-time { color: #888; font-size: 12px; }
+
+/* Tag links like "history" */
+.tf-tag-link {
+  color: #276;
+  text-decoration: none;
+  font-size: 12px;
+}
+.tf-tag-link:hover { text-decoration: underline; }
+
+/* Content preview — left border, NO blur/fade */
+.tf-blog-preview {
+  font-size: 12.5px;
+  color: #3d3d3d;
+  line-height: 1.6;
+  margin: 6px 0 6px 0;
+  padding: 8px 10px 8px 12px;
+  border-left: 4px solid #ccc;
+  background: #fff;
+  max-height: 260px;
+  overflow: hidden;
+  /* NO mask-image — removed the blur/fade */
+}
+
+.tf-blog-preview p  { margin: 3px 0; }
+.tf-blog-preview ul,
+.tf-blog-preview ol { margin: 3px 0 3px 18px; padding: 0; }
+.tf-blog-preview img { max-width: 100%; height: auto; display: block; margin: 4px 0; }
+.tf-blog-preview pre,
+.tf-blog-preview code { font-size: 12px; background: #f5f5f5; padding: 1px 3px; border-radius: 2px; }
+
+/* "Full text and comments »" — standalone italic link */
+.tf-readmore {
+  display: inline-block;
+  margin: 3px 0 5px;
+  font-size: 12px;
+  color: #888;
+  text-decoration: none;
+  font-style: italic;
+}
+.tf-readmore:hover { text-decoration: underline; color: #555; }
+
+/* Footer bar */
+.tf-blog-footer {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 4px 8px;
+  background: #f8f8f8;
+  border: 1px solid #e4e4e4;
+  font-size: 12px;
+  color: #888;
+  min-height: 28px;
+  margin-top: 4px;
+}
+
+/* ▲ +29 ▼ */
+.tf-vote-box {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.tf-vote-arrow {
+  font-size: 8px;
+  color: #bbb;
+  line-height: 1;
+  cursor: default;
+  user-select: none;
+}
+
+.tf-vote-score {
+  font-weight: bold;
+  font-size: 12px;
+  min-width: 24px;
+  text-align: center;
+}
+.tf-vote-score.pos { color: #080; }
+.tf-vote-score.neg { color: #c00; }
+
+/* Right side: avatar · author · time · 💬 N */
+.tf-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  color: #888;
+  font-size: 12px;
+}
+
+.tf-footer-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  object-fit: cover;
+  vertical-align: middle;
+  border: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.tf-footer-sep { color: #ccc; font-size: 11px; }
+
+.tf-footer-author {
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 12px;
+}
+.tf-footer-author:hover { text-decoration: underline; }
+
+.tf-footer-comments {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: #888;
+  text-decoration: none;
+  font-size: 12px;
+}
+.tf-footer-comments:hover { text-decoration: underline; }
+
+/* ══════════════════════════════════════════════════
+   COMMENT CARD
+   ══════════════════════════════════════════════════ */
+.tf-comment-card {
+  padding: 10px 0;
+  border-bottom: 1px dotted #d8d8d8;
+}
+.tf-comment-card:last-child { border-bottom: none; }
+
+.tf-comment-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.tf-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid #ddd;
+}
+
+.tf-comment-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tf-comment-source {
+  font-size: 12px;
+  color: #888;
+}
+
+.tf-source-link {
+  color: #276;
+  text-decoration: none;
+}
+.tf-source-link:hover { text-decoration: underline; }
+
+.tf-comment-score {
+  font-weight: bold;
+  font-size: 13px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.tf-comment-score.pos { color: #080; }
+.tf-comment-score.neg { color: #c00; }
+
+.tf-comment-body {
+  font-size: 12.5px;
+  color: #333;
+  line-height: 1.5;
+  margin-top: 6px;
+  padding-left: 50px;
+  word-break: break-word;
+}
+.tf-comment-body img { max-width: 100%; height: auto; }
+.tf-comment-body p { margin: 3px 0; }
+
+/* ── Inline avatar inside handle ─────────────────── */
+.tf-inline-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  object-fit: cover;
+  margin-right: 3px;
+  vertical-align: middle;
+  border: 1px solid #ddd;
+}
+
+/* ── CF handle colours ──────────────────────────── */
+.cf-handle {
+  font-weight: bold;
+  font-size: 13px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.cf-handle:hover { text-decoration: underline; }
+
+.rating-legendary { color: #ff0000; font-style: italic; }
+.rating-red       { color: #ff0000; }
+.rating-orange    { color: #ff8c00; }
+.rating-violet    { color: #aa00aa; }
+.rating-blue      { color: #0000ff; }
+.rating-cyan      { color: #03a89e; }
+.rating-green     { color: #008000; }
+.rating-gray      { color: #808080; }
+
+/* ── Retry button ────────────────────────────────── */
+.tf-retry-btn {
+  margin-top: 10px;
+  padding: 5px 14px;
+  font-size: 12px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #333;
+}
+.tf-retry-btn:hover { background: #e4e4e4; }
+
+/* ── States ──────────────────────────────────────── */
+.tf-spinner-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 0;
+  color: #888;
+  font-size: 13px;
+}
+
+.tf-spinner {
+  width: 16px;
+  height: 16px;
+}

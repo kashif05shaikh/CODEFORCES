@@ -4,9 +4,18 @@ let blogCache = null;
 let blogCacheTime = 0;
 const CACHE_TTL = 5 * 60 * 1000;
 
+// ✅ ONLY NEW THING: strips $$$...$$$  $$...$$ and $...$ from CF content
+function stripLatex(html = "") {
+  return html
+    .replace(/\$\$\$([^$]*)\$\$\$/g, "$1")
+    .replace(/\$\$([^$]*)\$\$/g, "$1")
+    .replace(/\$([^$]*)\$/g, "$1");
+}
+
 function fixCodeforcesHtml(html = "") {
   try {
-    const doc = new DOMParser().parseFromString(html, "text/html");
+    const cleaned = stripLatex(html); // ✅ ONLY ADDITION HERE
+    const doc = new DOMParser().parseFromString(cleaned, "text/html");
     doc.querySelectorAll("img").forEach((img) => {
       const src = img.getAttribute("src");
       if (!src) return;
@@ -111,7 +120,6 @@ function BlogFeed() {
               );
               const commentsCount = Number(commentLink?.textContent?.match(/\d+/)?.[0] || 0);
 
-              // ✅ FIX 1: Extract CF's precomputed time text
               const timeText = topic.querySelector(".date")?.textContent?.trim()
                 || topic.querySelector("span.format-humantime")?.textContent?.trim()
                 || "";
@@ -215,7 +223,6 @@ function BlogFeed() {
               {blog.authorHandle}
             </span>
             {", "}
-            {/* ✅ FIX 2: Use CF's time text with fallback */}
             <span className="blog-time">{blog.timeText || timeAgo(blog.creationTimeSeconds)}</span>
           </p>
 
@@ -251,7 +258,6 @@ function BlogFeed() {
               >
                 👤 {blog.authorHandle}
               </span>
-              {/* ✅ FIX 3: Use CF's time text in footer with fallback */}
               <span className="blog-footer-time">
                 📅 {blog.timeText || timeAgo(blog.creationTimeSeconds)}
               </span>
