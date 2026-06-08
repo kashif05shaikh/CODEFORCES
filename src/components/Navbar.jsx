@@ -25,15 +25,15 @@ function Navbar() {
           <li><Link to="/">HOME</Link></li>
           <li><Link to="/top">TOP</Link></li>
           <li><Link to="/catalog">CATALOG</Link></li>
-          <li><a href="https://codeforces.com/contests" target="_blank" rel="noreferrer">CONTESTS</a></li>
-          <li><a href="https://codeforces.com/gyms" target="_blank" rel="noreferrer">GYM</a></li>
+          <li><Link to="/contests">CONTESTS</Link></li>
+          <li><Link to="/gym">GYM</Link></li>
           <li><a href="https://codeforces.com/problemset" target="_blank" rel="noreferrer">PROBLEMSET</a></li>
           <li><a href="https://codeforces.com/groups" target="_blank" rel="noreferrer">GROUPS</a></li>
           <li><a href="https://codeforces.com/ratings" target="_blank" rel="noreferrer">RATING</a></li>
           <li><a href="https://codeforces.com/edu/courses" target="_blank" rel="noreferrer">EDU</a></li>
           <li><a href="https://codeforces.com/apiHelp" target="_blank" rel="noreferrer">API</a></li>
-          <li><a href="https://codeforces.com/calendar" target="_blank" rel="noreferrer">CALENDAR</a></li>
-          <li><a href="https://codeforces.com/help" target="_blank" rel="noreferrer">HELP</a></li>
+          <li><Link to="/calendar">CALENDAR</Link></li>
+          <li><Link to="/help">HELP</Link></li>
         </ul>
         <input placeholder="" type="text" className="search-box" />
       </div>

@@ -1,0 +1,386 @@
+.cf-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 820px) 264px;
+  gap: 14px;
+  align-items: start;
+  width: 1100px;
+  max-width: calc(100vw - 28px);
+  margin: 42px auto 60px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #000;
+}
+
+.cf-main { min-width: 0; }
+
+.cf-box,
+.cf-sb-box {
+  border: 1px solid #b8b8b8;
+  background: #fff;
+}
+
+.cf-past-box,
+.cf-filter-box {
+  margin-top: 26px;
+}
+
+.cf-box-head,
+.cf-sb-head {
+  min-height: 24px;
+  background: #d8d8d8;
+  border-bottom: 1px solid #b8b8b8;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.cf-sb-head {
+  color: #294c85;
+  font-family: Georgia, serif;
+  font-size: 17px;
+}
+
+.cf-head-count {
+  color: #555;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.cf-head-icon { color: #90a0b0; }
+.cf-head-icon2 { color: #154c74; font-size: 12px; }
+
+.cf-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+}
+
+.cf-table th,
+.cf-table td {
+  border: 1px solid #d7d7d7;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.cf-table th {
+  background: #f7f7f7;
+  padding: 4px 5px;
+  font-weight: bold;
+}
+
+.cf-table td {
+  padding: 8px 7px;
+  line-height: 1.16;
+}
+
+.cf-table tr th:first-child,
+.cf-table tr td:first-child { border-left: none; }
+
+.cf-table tr th:last-child,
+.cf-table tr td:last-child { border-right: none; }
+
+.cf-th-name { width: 36%; }
+.cf-th-writers { width: 19%; }
+.cf-th-start { width: 22%; }
+.cf-th-len { width: 9%; }
+.cf-th-reg { width: 14%; }
+
+.cf-past-row:nth-child(odd) { background: #fff; }
+.cf-past-row:nth-child(even) { background: #f4f4f4; }
+
+.cf-td-writers {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.cf-td-start {
+  font-size: 12px;
+}
+
+.cf-td-len,
+.cf-td-reg {
+  white-space: nowrap;
+}
+
+.cf-name-btn,
+.cf-sub-btn,
+.cf-start-blue,
+.cf-final-btn,
+.cf-sb-name,
+.cf-sb-regnow {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #00e;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+.cf-name-btn {
+  max-width: 100%;
+  font-size: 14px;
+  line-height: 1.18;
+}
+
+.cf-name-btn:hover,
+.cf-sub-btn:hover,
+.cf-start-blue:hover,
+.cf-final-btn:hover,
+.cf-sb-name:hover,
+.cf-sb-regnow:hover {
+  text-decoration: underline;
+}
+
+.cf-sub-links {
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.cf-sub-btn {
+  font-size: 11px;
+}
+
+.cf-start-blue {
+  font-size: 12px;
+}
+
+.cf-before-txt {
+  color: #555;
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+.cf-reg-btn {
+  border: 0;
+  background: #d30000;
+  color: #fff;
+  padding: 2px 9px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cf-reg-btn:hover {
+  background: #b30000;
+}
+
+.cf-final-btn {
+  font-size: 14px;
+}
+
+.cf-participants {
+  color: #00e;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.cf-empty {
+  color: #777;
+  padding: 18px 8px !important;
+}
+
+.cf-sidebar {
+  width: 264px;
+  min-width: 264px;
+}
+
+.cf-sb-body {
+  padding: 9px 10px;
+  line-height: 1.32;
+}
+
+.cf-pay-body {
+  text-align: center;
+}
+
+.cf-sb-label {
+  color: #1f3f7a;
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.cf-sb-name {
+  display: block;
+  width: 100%;
+  margin: 4px 0 2px;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.cf-sb-countdown {
+  color: #354f8b;
+  font-size: 14px;
+  margin: 2px 0;
+}
+
+.cf-sb-regnow {
+  font-size: 14px;
+}
+
+.cf-frow {
+  margin-bottom: 12px;
+}
+
+.cf-flabel {
+  display: block;
+  color: #294c85;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.cf-fselect,
+.cf-finput,
+.cf-type-trigger {
+  width: 100%;
+  height: 26px;
+  border: 1px solid #bcbcbc;
+  background: #fff;
+  color: #222;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  padding: 2px 7px;
+  box-sizing: border-box;
+}
+
+.cf-finput::placeholder {
+  color: #aaa;
+}
+
+.cf-fbtn {
+  display: block;
+  min-width: 60px;
+  margin: 18px auto 0;
+  border: 1px solid #999;
+  background: #eee;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  padding: 2px 14px;
+  cursor: pointer;
+}
+
+.cf-type-menu {
+  position: relative;
+}
+
+.cf-type-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-align: left;
+}
+
+.cf-type-panel {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  max-height: 230px;
+  overflow-y: auto;
+  border: 1px solid #cfcfcf;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.22);
+}
+
+.cf-type-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 26px;
+  padding: 4px 7px;
+  border-bottom: 1px solid #eee;
+  color: #222;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cf-type-option:hover {
+  background: #f5f5f5;
+}
+
+.cf-slides {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex-wrap: wrap;
+  padding: 10px 8px;
+  border-top: 1px solid #d7d7d7;
+  background: #fafafa;
+}
+
+.cf-slides button {
+  min-width: 24px;
+  height: 22px;
+  border: 1px solid #aaa;
+  background: #fff;
+  color: #00e;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cf-slides button.is-active {
+  background: #294c85;
+  border-color: #294c85;
+  color: #fff;
+  font-weight: bold;
+}
+
+.cf-slides button:disabled {
+  color: #aaa;
+  background: #eee;
+  cursor: default;
+}
+
+.cf-loading,
+.cf-error {
+  width: 1100px;
+  max-width: calc(100vw - 28px);
+  margin: 42px auto;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+
+.cf-error {
+  color: #b00020;
+}
+
+@media (max-width: 900px) {
+  .cf-layout {
+    grid-template-columns: 1fr;
+    width: calc(100vw - 20px);
+    margin-top: 18px;
+  }
+
+  .cf-sidebar {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cf-table {
+    table-layout: auto;
+  }
+
+  .cf-th-writers,
+  .cf-td-writers {
+    display: none;
+  }
+
+  .cf-name-btn,
+  .cf-final-btn {
+    font-size: 12px;
+  }
+}

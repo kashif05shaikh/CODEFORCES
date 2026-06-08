@@ -1,0 +1,172 @@
+.cp-wrapper {
+  padding: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+
+.cp-back {
+  background: none;
+  border: none;
+  color: #0000cc;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-bottom: 15px;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.cp-back:hover { color: #0000aa; }
+
+/* ── Header ── */
+.cp-header {
+  margin-bottom: 12px;
+}
+
+.cp-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 6px 0;
+  color: #000;
+}
+
+.cp-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+  color: #555;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cp-meta a {
+  color: #0000cc;
+  text-decoration: underline;
+}
+
+/* ── Tabs ── */
+.cp-tabs {
+  display: flex;
+  gap: 0;
+  margin: 15px 0 0 0;
+  border-bottom: 1px solid #c8c8c8;
+}
+
+.cp-tab {
+  padding: 6px 16px;
+  cursor: pointer;
+  background: #f0f0f0;
+  border: 1px solid #c8c8c8;
+  border-bottom: none;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000;
+  margin-right: 2px;
+  border-radius: 3px 3px 0 0;
+}
+.cp-tab:hover { background: #e4e4e4; }
+
+.cp-tab-active {
+  background: #fff;
+  border-bottom: 1px solid #fff;
+  font-weight: bold;
+  color: #000;
+  position: relative;
+  bottom: -1px;
+}
+
+/* ── Tab content ── */
+.cp-tab-content {
+  border: 1px solid #c8c8c8;
+  border-top: none;
+  overflow-x: auto;
+}
+
+/* ── Table ── */
+.cp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.cp-table th,
+.cp-table td {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.cp-table th {
+  background: #f7f7f7;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.cp-table td { vertical-align: middle; }
+
+.cp-td-idx    { width: 40px; font-weight: bold; }
+.cp-td-name   { text-align: left !important; }
+.cp-td-solved { color: #555; }
+.cp-points    { color: #888; font-size: 11px; }
+
+.cp-td-name a {
+  color: #0000cc;
+  text-decoration: none;
+}
+.cp-td-name a:hover { text-decoration: underline; }
+
+/* ── Standings ── */
+.cp-standings-wrap { overflow-x: auto; }
+
+.cp-standings-table { min-width: 600px; }
+
+.cp-th-prob { width: 40px; padding: 4px !important; }
+
+.cp-td-rank   { width: 40px; font-weight: bold; }
+.cp-td-handle { text-align: left !important; }
+.cp-td-handle a { color: #0000cc; text-decoration: none; }
+.cp-td-handle a:hover { text-decoration: underline; }
+
+.cp-td-prob-result { width: 40px; padding: 4px !important; font-size: 11px; }
+
+.cp-solved { background: #d4edda; }
+.cp-failed { background: #f8d7da; }
+
+.cp-prob-ok   { color: #155724; font-weight: bold; }
+.cp-prob-fail { color: #721c24; }
+
+.cp-td-score   { font-weight: bold; }
+.cp-td-penalty { color: #555; }
+
+/* ── Submissions ── */
+.cp-td-id      { font-size: 11px; color: #555; }
+.cp-td-when    { font-size: 11px; white-space: nowrap; }
+.cp-td-who a   { color: #0000cc; text-decoration: none; }
+.cp-td-who a:hover { text-decoration: underline; }
+.cp-td-prob    { text-align: left !important; font-size: 11px; }
+.cp-td-lang    { font-size: 11px; }
+.cp-td-time    { font-size: 11px; }
+.cp-td-mem     { font-size: 11px; }
+
+.cp-td-verdict { font-size: 11px; font-weight: bold; }
+.cf-verd-ok      { color: #155724; }
+.cf-verd-fail    { color: #721c24; }
+.cf-verd-pending { color: #856404; }
+
+/* ── States ── */
+.cp-loading,
+.cp-empty {
+  padding: 20px;
+  color: #777;
+  font-size: 13px;
+}
+
+.cp-error {
+  padding: 12px;
+  color: #c00020;
+  font-size: 13px;
+}
+.cp-error button {
+  margin-left: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
