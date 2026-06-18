@@ -1,0 +1,54 @@
+.cf-footer {
+  width: 1200px;
+  max-width: calc(100% - 40px);
+  margin: 38px auto 0;
+  padding-bottom: 6px;
+  text-align: center;
+  color: #000;
+  font-size: 13px;
+  line-height: 1.15;
+}
+
+.cf-footer-line {
+  border-top: 1px solid #cfcfcf;
+  margin-bottom: 13px;
+}
+
+.cf-footer a {
+  color: #0000cc;
+  text-decoration: underline;
+}
+
+.cf-supported {
+  margin-top: 28px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.cf-ton {
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #0798d8;
+  text-decoration: none;
+}
+
+.cf-ton span {
+  width: 28px;
+  height: 28px;
+  display: block;
+  background: white;
+  clip-path: polygon(50% 100%, 4% 18%, 96% 18%);
+  position: relative;
+}
+
+.cf-ton span::after {
+  content: "";
+  position: absolute;
+  inset: 5px 8px 8px;
+  background: #0798d8;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+}

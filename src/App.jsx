@@ -10,6 +10,12 @@ import ContestDetailPage from "./pages/ContestDetailPage";
 import HelpPage from "./pages/HelpPage";
 import CalendarPage     from "./pages/CalendarPage";
 import GymPage           from "./pages/GymPage";
+import ApiHelpPage from "./pages/ApiHelpPage";
+import ProblemsetPage    from "./pages/ProblemsetPage";
+import EduPage from "./pages/EduPage";
+import RatingPage from "./pages/RatingPage";
+import GroupsPage from "./pages/GroupsPage";
+import CodeforcesFooter from "./components/CodeforcesFooter";
 
 function App() {
   return (
@@ -23,7 +29,16 @@ function App() {
         <Route path="/help" element={<HelpPage />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/gym" element={<GymPage />} />
+        <Route path="/problemset" element={<ProblemsetPage />} />
+        <Route path="/api-help" element={<ApiHelpPage />} />
+        <Route path="/api-help/methods" element={<ApiHelpPage />} />
+        <Route path="/api-help/objects" element={<ApiHelpPage />} />
+        <Route path="/edu" element={<EduPage />} />
+        <Route path="/ratings" element={<RatingPage />} />
+        <Route path="/groups" element={<GroupsPage />} />
       </Routes>
+
+      <CodeforcesFooter />
     </BrowserRouter>
   );
 }

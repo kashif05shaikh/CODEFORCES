@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./CatalogFeed.css";
-
 const REFRESH_MS = 5 * 60 * 1000;
-
 const CATALOG_SOURCES = [
   "/cf/catalog",
   "https://api.allorigins.win/raw?url=https://codeforces.com/catalog",
   "https://corsproxy.io/?https://codeforces.com/catalog",
 ];
-
 function absoluteLinks(root) {
   root.querySelectorAll("a[href]").forEach((a) => {
     const href = a.getAttribute("href");
@@ -19,10 +16,8 @@ function absoluteLinks(root) {
     a.setAttribute("rel", "noreferrer");
   });
 }
-
 function cleanUnsafe(root) {
   root.querySelectorAll("script, iframe, object, embed").forEach((el) => el.remove());
-
   root.querySelectorAll("*").forEach((el) => {
     [...el.attributes].forEach((attr) => {
       if (attr.name.startsWith("on")) {
@@ -31,96 +26,72 @@ function cleanUnsafe(root) {
     });
   });
 }
-
 function findHistoryBox(doc) {
   return [...doc.querySelectorAll(".roundbox, .sidebox, div")].find((box) => {
     const text = box.textContent.replace(/\s+/g, " ").trim();
     return text.startsWith("→ History") || text.startsWith("History");
   });
 }
-
 function findCatalogContent(doc) {
   const catalog = doc.querySelector("._CatalogViewFrame_catalog");
   if (!catalog) return null;
-
   const wrapper = document.createElement("div");
-
   const title = document.createElement("div");
   title.className = "cf-catalog-title";
   title.textContent = "Catalog";
-
   wrapper.appendChild(title);
   wrapper.appendChild(catalog.cloneNode(true));
-
   return wrapper;
 }
-
 async function fetchCatalogHtml() {
   let lastError = null;
-
   for (const source of CATALOG_SOURCES) {
     try {
       const joiner = source.includes("?") ? "&" : "?";
       const response = await fetch(`${source}${joiner}t=${Date.now()}`);
-
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
       const html = await response.text();
-
       if (!html.includes("_CatalogViewFrame_catalog")) {
         throw new Error("Invalid catalog HTML");
       }
-
       return html;
     } catch (err) {
       lastError = err;
       console.warn("[CatalogFeed] source failed:", source, err.message);
     }
   }
-
   throw lastError || new Error("All catalog sources failed");
 }
-
 function parseCatalogPage(html) {
   const doc = new DOMParser().parseFromString(html, "text/html");
-
   const catalogNode = findCatalogContent(doc);
   const historyNode = findHistoryBox(doc);
-
   if (!catalogNode) throw new Error("Catalog folder tree not found");
-
   cleanUnsafe(catalogNode);
   absoluteLinks(catalogNode);
-
   let historyHtml = "";
-
   if (historyNode) {
     const historyClone = historyNode.cloneNode(true);
     cleanUnsafe(historyClone);
     absoluteLinks(historyClone);
     historyHtml = historyClone.innerHTML;
   }
-
   return {
     catalogHtml: catalogNode.innerHTML,
     historyHtml,
   };
 }
-
 export default function CatalogFeed() {
   const catalogRef = useRef(null);
   const [catalogHtml, setCatalogHtml] = useState("");
   const [historyHtml, setHistoryHtml] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const load = useCallback(async () => {
     try {
       setError("");
-
       const html = await fetchCatalogHtml();
       const parsed = parseCatalogPage(html);
-
       setCatalogHtml(parsed.catalogHtml);
       setHistoryHtml(parsed.historyHtml);
     } catch (err) {

@@ -3,9 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import "../App.css";
 import "./ContestDetailPage.css";
-
-const CF = "https://corsproxy.io/?url=https://codeforces.com/api";
-
+const BASE = "/api";
 function useContestData(contestId) {
   const [problems, setProblems] = useState([]);
   const [standings, setStandings] = useState([]);
@@ -13,17 +11,15 @@ function useContestData(contestId) {
   const [contestInfo, setContestInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const load = useCallback(async () => {
     try {
       setError("");
       setLoading(true);
       const [standRes, statusRes] = await Promise.all([
-        fetch(`${CF}/contest.standings?contestId=${contestId}&from=1&count=50&showUnofficial=false`),
-        fetch(`${CF}/contest.status?contestId=${contestId}&from=1&count=100`),
+        fetch(`${BASE}/contest.standings?contestId=${contestId}`),
+        fetch(`${BASE}/contest.status?contestId=${contestId}&from=1&count=100`),
       ]);
       const [standData, statusData] = await Promise.all([standRes.json(), statusRes.json()]);
-
       if (standData.status === "OK") {
         setContestInfo(standData.result.contest);
         setProblems(standData.result.problems || []);
@@ -44,7 +40,6 @@ function useContestData(contestId) {
   useEffect(() => { load(); }, [load]);
   return { problems, standings, submissions, contestInfo, loading, error, reload: load };
 }
-
 function formatTime(unix) {
   if (!unix) return "—";
   const d = new Date(unix * 1000);
@@ -53,19 +48,16 @@ function formatTime(unix) {
     hour: "2-digit", minute: "2-digit", hour12: false,
   });
 }
-
 function formatDuration(s) {
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
   return `${h}:${String(m).padStart(2, "0")}`;
 }
-
 function verdictClass(verdict) {
   if (!verdict) return "cf-verd-pending";
   if (verdict === "OK") return "cf-verd-ok";
   return "cf-verd-fail";
 }
-
 function verdictLabel(verdict) {
   if (!verdict) return "In queue";
   const map = {
@@ -83,7 +75,6 @@ function verdictLabel(verdict) {
   };
   return map[verdict] || verdict;
 }
-
 function ProblemsTab({ problems, contestId }) {
   if (!problems.length) return <div className="cp-empty">No problems found.</div>;
   return (
@@ -118,102 +109,137 @@ function ProblemsTab({ problems, contestId }) {
     </table>
   );
 }
-
 function StandingsTab({ standings, problems }) {
-  if (!standings.length) return <div className="cp-empty">No standings available.</div>;
+  // Show login warning — standings require authentication on Codeforces
   return (
-    <div className="cp-standings-wrap">
-      <table className="cp-table cp-standings-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Who</th>
-            {problems.map(p => <th key={p.index} className="cp-th-prob">{p.index}</th>)}
-            <th>=</th>
-            <th>Penalty</th>
-          </tr>
-        </thead>
-        <tbody>
-          {standings.map((row) => {
-            const handle = row.party?.members?.[0]?.handle || "?";
-            return (
-              <tr key={handle}>
-                <td className="cp-td-rank">{row.rank}</td>
-                <td className="cp-td-handle">
-                  <a href={`https://codeforces.com/profile/${handle}`} target="_blank" rel="noreferrer">
-                    {handle}
-                  </a>
-                </td>
-                {problems.map((p, i) => {
-                  const pr = row.problemResults?.[i];
-                  return (
-                    <td
-                      key={p.index}
-                      className={`cp-td-prob-result ${pr?.points > 0 ? "cp-solved" : pr?.rejectedAttemptCount > 0 ? "cp-failed" : ""}`}
-                    >
-                      {pr?.points > 0 ? (
-                        <span className="cp-prob-ok">+{pr.rejectedAttemptCount > 0 ? pr.rejectedAttemptCount : ""}</span>
-                      ) : pr?.rejectedAttemptCount > 0 ? (
-                        <span className="cp-prob-fail">-{pr.rejectedAttemptCount}</span>
-                      ) : ""}
-                    </td>
-                  );
-                })}
-                <td className="cp-td-score">{row.points ?? "—"}</td>
-                <td className="cp-td-penalty">{row.penalty ?? "—"}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="cp-login-warning-wrap">
+      <div className="cp-login-warning">
+        You are not allowed to view the contest standings. Please{" "}
+        <a href="https://codeforces.com/enter" target="_blank" rel="noreferrer">
+          enter
+        </a>{" "}
+        or{" "}
+        <a href="https://codeforces.com/register" target="_blank" rel="noreferrer">
+          register
+        </a>
+        .
+      </div>
     </div>
   );
 }
-
 function SubmissionsTab({ submissions }) {
-  if (!submissions.length) return <div className="cp-empty">No submissions available.</div>;
+  // Show login warning — submissions require authentication on Codeforces
   return (
-    <table className="cp-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>When</th>
-          <th>Who</th>
-          <th>Problem</th>
-          <th>Lang</th>
-          <th>Verdict</th>
-          <th>Time</th>
-          <th>Memory</th>
-        </tr>
-      </thead>
-      <tbody>
-        {submissions.map(s => (
-          <tr key={s.id}>
-            <td className="cp-td-id">{s.id}</td>
-            <td className="cp-td-when">{formatTime(s.creationTimeSeconds)}</td>
-            <td className="cp-td-who">
-              <a href={`https://codeforces.com/profile/${s.author?.members?.[0]?.handle}`} target="_blank" rel="noreferrer">
-                {s.author?.members?.[0]?.handle || "?"}
-              </a>
-            </td>
-            <td className="cp-td-prob">{s.problem?.index} - {s.problem?.name}</td>
-            <td className="cp-td-lang">{s.programmingLanguage}</td>
-            <td className={`cp-td-verdict ${verdictClass(s.verdict)}`}>{verdictLabel(s.verdict)}</td>
-            <td className="cp-td-time">{s.timeConsumedMillis} ms</td>
-            <td className="cp-td-mem">{Math.round(s.memoryConsumedBytes / 1024)} KB</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="cp-login-warning-wrap">
+      <div className="cp-login-warning">
+        You are not allowed to view the contest status. Please{" "}
+        <a href="https://codeforces.com/enter" target="_blank" rel="noreferrer">
+          enter
+        </a>{" "}
+        or{" "}
+        <a href="https://codeforces.com/register" target="_blank" rel="noreferrer">
+          register
+        </a>
+        .
+      </div>
+    </div>
   );
 }
-
+function PracticeSidebar({ contestId }) {
+  return (
+    <div className="cp-sidebar-box">
+      <div className="cp-sidebar-box-title">
+        <span className="cp-sidebar-icon">◆</span> Practice?
+      </div>
+      <div className="cp-sidebar-box-body">
+        <p>
+          Want to solve the contest problems after the official contest ends? Just register for
+          practice and you will be able to submit solutions.
+        </p>
+        <a
+          className="cp-sidebar-btn"
+          href={`https://codeforces.com/contestRegistration/${contestId}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Register for practice
+        </a>
+      </div>
+    </div>
+  );
+}
+function VirtualParticipationSidebar({ contestId }) {
+  const [open, setOpen] = useState(true);
+  return (
+    <div className="cp-sidebar-box">
+      <div className="cp-sidebar-box-title cp-sidebar-box-title--collapsible" onClick={() => setOpen(o => !o)}>
+        <span className="cp-sidebar-icon">◆</span> Virtual participation
+        <span className="cp-sidebar-chevron">{open ? "▲" : "▼"}</span>
+      </div>
+      {open && (
+        <div className="cp-sidebar-box-body">
+          <p>
+            Virtual contest is a way to take part in past contests, as close as possible to
+            participation on time. It is supported only ICPC mode for virtual contests. A virtual
+            contest is not for you — if you just want to solve these problems in the archive. A
+            virtual contest is not for you — if you want to solve this problem in the archive.
+            Never use someone else's code, read the tutorials or communicate with another person
+            during a virtual contest.
+          </p>
+          <a
+            className="cp-sidebar-btn"
+            href={`https://codeforces.com/contest/${contestId}/virtual`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Start virtual contest
+          </a>
+        </div>
+      )}
+    </div>
+  );
+}
+function ContestMaterialsSidebar({ contestId }) {
+  return (
+    <div className="cp-sidebar-box">
+      <div className="cp-sidebar-box-title">
+        <span className="cp-sidebar-icon">◆</span> Contest materials
+      </div>
+      <div className="cp-sidebar-box-body">
+        <ul className="cp-sidebar-materials">
+          <li>
+            <a
+              href={`https://codeforces.com/blog/entry/announcement-${contestId}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Announcement
+            </a>
+            <span className="cp-sidebar-lang"> (en)</span>
+            <button className="cp-sidebar-dismiss" title="Dismiss">×</button>
+          </li>
+          <li>
+            <a
+              href={`https://codeforces.com/blog/entry/tutorial-${contestId}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Tutorial
+            </a>
+            <span className="cp-sidebar-lang"> (en)</span>
+            <button className="cp-sidebar-dismiss" title="Dismiss">×</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+}
 export default function ContestDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [tab, setTab] = useState("problems");
   const { problems, standings, submissions, contestInfo, loading, error, reload } = useContestData(id);
-
+  
   return (
     <div>
       <Navbar />
@@ -225,40 +251,50 @@ export default function ContestDetailPage() {
           {error && <div className="cp-error">{error} <button onClick={reload}>Retry</button></div>}
 
           {!loading && !error && (
-            <>
-              <div className="cp-header">
-                <h2 className="cp-title">{contestInfo?.name || `Contest #${id}`}</h2>
-                <div className="cp-meta">
-                  {contestInfo?.startTimeSeconds && (
-                    <span>Start: {formatTime(contestInfo.startTimeSeconds)}</span>
-                  )}
-                  {contestInfo?.durationSeconds && (
-                    <span>Duration: {formatDuration(contestInfo.durationSeconds)}</span>
-                  )}
-                  <a href={`https://codeforces.com/contest/${id}`} target="_blank" rel="noreferrer">
-                    Open on Codeforces ↗
-                  </a>
+            <div className="cp-layout">
+              {/* ── Main content ── */}
+              <div className="cp-main">
+                <div className="cp-header">
+                  <h2 className="cp-title">{contestInfo?.name || `Contest #${id}`}</h2>
+                  <div className="cp-meta">
+                    {contestInfo?.startTimeSeconds && (
+                      <span>Start: {formatTime(contestInfo.startTimeSeconds)}</span>
+                    )}
+                    {contestInfo?.durationSeconds && (
+                      <span>Duration: {formatDuration(contestInfo.durationSeconds)}</span>
+                    )}
+                    <a href={`https://codeforces.com/contest/${id}`} target="_blank" rel="noreferrer">
+                      Open on Codeforces ↗
+                    </a>
+                  </div>
+                </div>
+
+                <div className="cp-tabs">
+                  {["problems", "standings", "submissions"].map(t => (
+                    <button
+                      key={t}
+                      className={`cp-tab ${tab === t ? "cp-tab-active" : ""}`}
+                      onClick={() => setTab(t)}
+                    >
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="cp-tab-content">
+                  {tab === "problems"    && <ProblemsTab    problems={problems}    contestId={id} />}
+                  {tab === "standings"   && <StandingsTab   standings={standings}  problems={problems} />}
+                  {tab === "submissions" && <SubmissionsTab submissions={submissions} />}
                 </div>
               </div>
 
-              <div className="cp-tabs">
-                {["problems", "standings", "submissions"].map(t => (
-                  <button
-                    key={t}
-                    className={`cp-tab ${tab === t ? "cp-tab-active" : ""}`}
-                    onClick={() => setTab(t)}
-                  >
-                    {t.charAt(0).toUpperCase() + t.slice(1)}
-                  </button>
-                ))}
+              {/* ── Right sidebar ── */}
+              <div className="cp-sidebar">
+                <PracticeSidebar contestId={id} />
+                <VirtualParticipationSidebar contestId={id} />
+                <ContestMaterialsSidebar contestId={id} />
               </div>
-
-              <div className="cp-tab-content">
-                {tab === "problems"    && <ProblemsTab    problems={problems}    contestId={id} />}
-                {tab === "standings"   && <StandingsTab   standings={standings}  problems={problems} />}
-                {tab === "submissions" && <SubmissionsTab submissions={submissions} />}
-              </div>
-            </>
+            </div>
           )}
         </div>
       </div>

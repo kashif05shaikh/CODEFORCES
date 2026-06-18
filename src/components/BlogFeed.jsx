@@ -1,20 +1,16 @@
 import { useEffect, useState } from "react";
-
 let blogCache = null;
 let blogCacheTime = 0;
 const CACHE_TTL = 5 * 60 * 1000;
-
-// ✅ ONLY NEW THING: strips $$$...$$$  $$...$$ and $...$ from CF content
 function stripLatex(html = "") {
   return html
     .replace(/\$\$\$([^$]*)\$\$\$/g, "$1")
     .replace(/\$\$([^$]*)\$\$/g, "$1")
     .replace(/\$([^$]*)\$/g, "$1");
 }
-
 function fixCodeforcesHtml(html = "") {
   try {
-    const cleaned = stripLatex(html); // ✅ ONLY ADDITION HERE
+    const cleaned = stripLatex(html);
     const doc = new DOMParser().parseFromString(cleaned, "text/html");
     doc.querySelectorAll("img").forEach((img) => {
       const src = img.getAttribute("src");
@@ -35,7 +31,6 @@ function fixCodeforcesHtml(html = "") {
     return "";
   }
 }
-
 function timeAgo(seconds) {
   const diff = Math.max(0, Math.floor(Date.now() / 1000) - seconds);
   if (diff < 60) return `${diff} seconds ago`;
@@ -45,7 +40,6 @@ function timeAgo(seconds) {
   if (diff < 31536000) return `${Math.floor(diff / 2592000)} months ago`;
   return `${Math.floor(diff / 31536000)} years ago`;
 }
-
 function getRatingClass(rating) {
   if (rating === undefined || rating === null) return "rating-newbie";
   if (rating >= 3000) return "rating-legendary";
@@ -59,12 +53,10 @@ function getRatingClass(rating) {
   if (rating >= 1200) return "rating-pupil";
   return "rating-newbie";
 }
-
 function extractBlogId(href = "") {
   const match = href.match(/\/blog\/entry\/(\d+)/);
   return match ? Number(match[1]) : null;
 }
-
 function BlogFeed() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -97,8 +89,8 @@ function BlogFeed() {
                 topic.querySelector(".title a[href*='/blog/entry/']") ||
                 topic.querySelector("a[href*='/blog/entry/']");
               if (!titleLink) return null;
-
               const title = titleLink?.textContent?.trim() || "Untitled";
+              
               const id = extractBlogId(titleLink.getAttribute("href") || "");
               if (!id) return null;
 

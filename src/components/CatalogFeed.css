@@ -1,4 +1,3 @@
-/* ── Layout ── */
 .cf-catalog-layout {
   display: grid;
   grid-template-columns: 1fr 285px;
@@ -13,7 +12,6 @@
   min-width: 0;
 }
 
-/* ── Controls ── */
 .cf-live-controls {
   display: flex;
   justify-content: flex-end;
@@ -45,7 +43,6 @@
   box-sizing: border-box;
 }
 
-/* ── Catalog title ── */
 .cf-catalog-title {
   color: #3b5998;
   font-size: 15px;
@@ -53,7 +50,6 @@
   margin: 0 0 12px 0;
 }
 
-/* ── Tree content ── */
 .cf-catalog-content {
   font-size: 12px;
   line-height: 1.25;
@@ -108,7 +104,6 @@
 .cf-catalog-content .cf-collapsed > ._children { display: none; }
 .cf-catalog-content.cf-folders-only ._catalogBlogEntry { display: none; }
 
-/* ── Folder icon ── */
 .cf-catalog-content i[class^="icon-folder"],
 .cf-catalog-content i[class^="icon-file"] {
   display: inline-block;
@@ -166,7 +161,6 @@
   box-sizing: border-box;
 }
 
-/* ── Description text ── */
 .cf-catalog-content small {
   display: block;
   color: #888;
@@ -179,7 +173,6 @@
 
 .cf-catalog-content .format-humantime { color: #000; }
 
-/* ── Rated user colors ── */
 .cf-catalog-content .rated-user { font-weight: bold; text-decoration: none; }
 .cf-catalog-content .user-legendary,
 .cf-catalog-content .user-red    { color: #ff0000; }
@@ -190,7 +183,6 @@
 .cf-catalog-content .user-green  { color: #008000; }
 .cf-catalog-content .user-gray   { color: #808080; }
 
-/* ── History panel ── */
 .cf-history-panel {
   width: 285px;
   border: 1px solid #c8c8c8;
@@ -224,7 +216,6 @@
   line-height: 1.4;
 }
 
-/* ── States ── */
 .catalog-loading,
 .catalog-error,
 .history-empty {
@@ -236,7 +227,6 @@
 .catalog-error { color: #c00020; }
 .catalog-error button { margin-top: 8px; }
 
-/* ── Responsive ── */
 @media (max-width: 900px) {
   .cf-catalog-layout {
     grid-template-columns: 1fr;
@@ -245,5 +235,27 @@
   .cf-history-panel {
     width: 100%;
     margin-top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .cf-catalog-filter {
+    width: 110px;
+  }
+
+  .cf-catalog-content ._children {
+    padding-left: 14px;
+  }
+
+  .cf-catalog-content small {
+    margin-left: 16px;
+  }
+
+  .cf-catalog-content ._catalogFolder > ._name {
+    font-size: 12px;
+  }
+
+  .cf-catalog-title {
+    font-size: 14px;
   }
 }

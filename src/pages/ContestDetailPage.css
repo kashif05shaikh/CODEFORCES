@@ -17,6 +17,139 @@
 }
 .cp-back:hover { color: #0000aa; }
 
+/* ── Two-column layout ── */
+.cp-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.cp-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Sidebar ── */
+.cp-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cp-sidebar-box {
+  border: 1px solid #c8c8c8;
+  background: #fff;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.cp-sidebar-box-title {
+  background: #d9edf7;
+  border-bottom: 1px solid #bce8f1;
+  padding: 5px 8px;
+  font-weight: bold;
+  font-size: 12px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
+}
+
+.cp-sidebar-box-title--collapsible {
+  cursor: pointer;
+}
+.cp-sidebar-box-title--collapsible:hover {
+  background: #c8e3f0;
+}
+
+.cp-sidebar-icon {
+  color: #555;
+  font-size: 9px;
+}
+
+.cp-sidebar-chevron {
+  margin-left: auto;
+  font-size: 10px;
+  color: #555;
+}
+
+.cp-sidebar-box-body {
+  padding: 8px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.cp-sidebar-box-body p {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+}
+
+.cp-sidebar-btn {
+  display: block;
+  text-align: center;
+  background: #f0f0f0;
+  border: 1px solid #c8c8c8;
+  border-radius: 2px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #0000cc;
+  text-decoration: none;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+.cp-sidebar-btn:hover {
+  background: #e0e0e0;
+  text-decoration: underline;
+}
+
+/* ── Contest materials list ── */
+.cp-sidebar-materials {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cp-sidebar-materials li {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.cp-sidebar-materials li:last-child {
+  border-bottom: none;
+}
+
+.cp-sidebar-materials a {
+  color: #0000cc;
+  text-decoration: none;
+  font-size: 12px;
+  flex: 1;
+}
+.cp-sidebar-materials a:hover { text-decoration: underline; }
+
+.cp-sidebar-lang {
+  color: #888;
+  font-size: 11px;
+}
+
+.cp-sidebar-dismiss {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+.cp-sidebar-dismiss:hover { color: #c00; }
+
 /* ── Header ── */
 .cp-header {
   margin-bottom: 12px;
@@ -81,6 +214,29 @@
   overflow-x: auto;
 }
 
+/* ── Login warning ── */
+.cp-login-warning-wrap {
+  padding: 16px;
+}
+
+.cp-login-warning {
+  background: #fcf8e3;
+  border: 1px solid #faebcc;
+  border-radius: 2px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #8a6d3b;
+  line-height: 1.5;
+}
+
+.cp-login-warning a {
+  color: #0000cc;
+  text-decoration: underline;
+}
+.cp-login-warning a:hover {
+  color: #0000aa;
+}
+
 /* ── Table ── */
 .cp-table {
   width: 100%;
@@ -113,31 +269,20 @@
   text-decoration: none;
 }
 .cp-td-name a:hover { text-decoration: underline; }
-
-/* ── Standings ── */
 .cp-standings-wrap { overflow-x: auto; }
-
 .cp-standings-table { min-width: 600px; }
-
 .cp-th-prob { width: 40px; padding: 4px !important; }
-
 .cp-td-rank   { width: 40px; font-weight: bold; }
 .cp-td-handle { text-align: left !important; }
 .cp-td-handle a { color: #0000cc; text-decoration: none; }
 .cp-td-handle a:hover { text-decoration: underline; }
-
 .cp-td-prob-result { width: 40px; padding: 4px !important; font-size: 11px; }
-
 .cp-solved { background: #d4edda; }
 .cp-failed { background: #f8d7da; }
-
 .cp-prob-ok   { color: #155724; font-weight: bold; }
 .cp-prob-fail { color: #721c24; }
-
 .cp-td-score   { font-weight: bold; }
 .cp-td-penalty { color: #555; }
-
-/* ── Submissions ── */
 .cp-td-id      { font-size: 11px; color: #555; }
 .cp-td-when    { font-size: 11px; white-space: nowrap; }
 .cp-td-who a   { color: #0000cc; text-decoration: none; }
@@ -146,13 +291,10 @@
 .cp-td-lang    { font-size: 11px; }
 .cp-td-time    { font-size: 11px; }
 .cp-td-mem     { font-size: 11px; }
-
 .cp-td-verdict { font-size: 11px; font-weight: bold; }
 .cf-verd-ok      { color: #155724; }
 .cf-verd-fail    { color: #721c24; }
 .cf-verd-pending { color: #856404; }
-
-/* ── States ── */
 .cp-loading,
 .cp-empty {
   padding: 20px;
@@ -169,4 +311,12 @@
   margin-left: 8px;
   font-size: 12px;
   cursor: pointer;
+}
+@media (max-width: 720px) {
+  .cp-layout {
+    flex-direction: column;
+  }
+  .cp-sidebar {
+    width: 100%;
+  }
 }

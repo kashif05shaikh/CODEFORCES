@@ -52,18 +52,23 @@ a:visited {
 }
 
 .navbar-top {
-  position: relative;
-  min-height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .navbar-inner {
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
+  max-width: 100%;
 }
 
 .logo-img {
   width: 280px;
+  max-width: 100%;
   height: auto;
   display: block;
 }
@@ -73,9 +78,6 @@ a:visited {
 }
 
 .navbar-auth {
-  position: absolute;
-  top: 6px;
-  right: 0;
   text-align: right;
   font-size: 16px;
 }
@@ -98,6 +100,8 @@ a:visited {
 }
 
 .navbar-links-bar {
+  width: 100%;
+  box-sizing: border-box;
   height: 36px;
   border: 1px solid #c7c7c7;
   border-radius: 4px;
@@ -202,6 +206,30 @@ a:visited {
   line-height: 1.45;
   color: #000000;
   overflow: hidden;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Scraped CF post HTML can contain raw <pre>/<code> blocks with long
+   unwrapped lines (code samples, tokens). These have no width limit
+   from real Codeforces CSS, so without this they push the container
+   wider than the viewport. Let them scroll horizontally instead. */
+.blog-content pre,
+.blog-content code {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+
+/* Catch-all: any element with an inline style="width: ...px" baked
+   into the scraped HTML (common in real CF posts) gets capped here
+   regardless of its own width attribute. */
+.blog-content * {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .blog-content h1,
@@ -246,6 +274,9 @@ a:visited {
 .blog-content table {
   border-collapse: collapse;
   max-width: 100%;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .blog-content td,
@@ -260,6 +291,14 @@ a:visited {
   font-size: 15px;
 }
 
+.loading {
+  color: #777777;
+  font-size: 14px;
+  padding: 8px 0;
+}
+
+/* BLOG FOOTER (single source of truth — was previously duplicated) */
+
 .blog-footer {
   min-height: 38px;
   border: 1px solid #c8c8c8;
@@ -271,6 +310,7 @@ a:visited {
   padding: 7px 12px;
   font-size: 14px;
   color: #000000;
+  flex-wrap: wrap;
 }
 
 .vote-box {
@@ -287,6 +327,12 @@ a:visited {
   font-size: 14px;
   line-height: 1;
   padding: 0;
+}
+
+.vote-up,
+.vote-down {
+  color: #d8e0f2;
+  text-shadow: 0 1px 0 #ffffff;
 }
 
 .vote-score {
@@ -309,16 +355,31 @@ a:visited {
   color: #666666;
 }
 
+.blog-footer-right {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.blog-footer-author,
+.blog-footer-comments {
+  color: #0000cc;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.blog-footer-time {
+  color: #000000;
+  font-size: 14px;
+}
+
 .blog-card hr {
   border: none;
   border-top: 1px solid #dddddd;
   margin: 16px 0 0;
-}
-
-.loading {
-  color: #777777;
-  font-size: 14px;
-  padding: 8px 0;
 }
 
 /* SIDEBAR */
@@ -448,6 +509,7 @@ a:visited {
 
 .finduser-input {
   width: 132px;
+  max-width: 100%;
   height: 24px;
   border: 1px solid #c8c8c8;
   font-size: 14px;
@@ -552,132 +614,8 @@ a:visited {
   font-weight: bold;
 }
 
-/* RESPONSIVE */
+/* CATALOG PAGE */
 
-@media (max-width: 900px) {
-  .container,
-  .navbar {
-    max-width: calc(100% - 20px);
-  }
-
-  .main-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    width: 100%;
-  }
-
-  .navbar-top {
-    min-height: 92px;
-  }
-
-  .navbar-auth {
-    top: 58px;
-  }
-
-  .navbar-links-bar {
-    height: auto;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    padding: 5px;
-  }
-
-  .navbar-links {
-    flex-wrap: wrap;
-  }
-
-  .search-box {
-    margin: 6px 5px;
-  }
-
-  .blog-title {
-    font-size: 22px;
-  }
-
-  .blog-content {
-    font-size: 15px;
-  }
-
-  .blog-content h1 {
-    font-size: 30px;
-  }
-}
-.blog-footer {
-  min-height: 38px;
-  border: 1px solid #c8c8c8;
-  border-radius: 4px;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  padding: 7px 12px;
-  font-size: 14px;
-}
-
-.vote-box {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.vote-btn {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  padding: 0;
-}
-
-.vote-up,
-.vote-down {
-  color: #d8e0f2;
-  text-shadow: 0 1px 0 #ffffff;
-}
-
-.vote-score {
-  color: #008000;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.vote-score.negative {
-  color: #cc0000;
-}
-
-.blog-footer-right {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 18px;
-  color: #000000;
-  white-space: nowrap;
-}
-
-.blog-footer-author,
-.blog-footer-comments {
-  color: #0000cc;
-  text-decoration: underline;
-  font-size: 14px;
-}
-
-.blog-footer-time {
-  color: #000000;
-  font-size: 14px;
-}
-
-@media (max-width: 700px) {
-  .blog-footer {
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .blog-footer-right {
-    flex-wrap: wrap;
-    gap: 8px;
-    white-space: normal;
-  }
-}
 .catalog-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 285px;
@@ -702,4 +640,169 @@ a:visited {
 .green {
   background: #b6ff9b;
   color: #008000;
+}
+
+/* ────────────────────────────────────────────────── */
+/* RESPONSIVE                                          */
+/* ────────────────────────────────────────────────── */
+
+/* Tablet / narrow desktop: stack the two-column layouts,
+   sidebar goes full width below the main content. */
+@media (max-width: 900px) {
+  .container,
+  .navbar {
+    max-width: calc(100% - 20px);
+  }
+
+  .main-layout,
+  .catalog-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar,
+  .catalog-history {
+    width: 100%;
+  }
+
+  /* navbar-top/navbar-auth no longer need fixed top/min-height
+     overrides here — flexbox wrap on .navbar-top handles the
+     logo/auth stacking automatically at any width. */
+
+  .navbar-links-bar {
+    height: auto;
+    align-items: flex-start;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .navbar-links {
+    flex-wrap: wrap;
+    gap: 4px 2px;
+    width: 100%;
+  }
+
+  .navbar-links li a {
+    padding: 6px 9px;
+  }
+
+  .search-box {
+    margin: 0;
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .blog-title {
+    font-size: 22px;
+  }
+
+  .blog-content {
+    font-size: 15px;
+  }
+
+  .blog-content h1 {
+    font-size: 30px;
+  }
+
+  .blog-footer {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .blog-footer-right {
+    flex-wrap: wrap;
+    gap: 8px;
+    white-space: normal;
+  }
+}
+
+/* Phone: tighten everything further, fix the things that
+   only break once the viewport gets genuinely narrow
+   (logo no longer fits next to the auth block, tables
+   need to scroll instead of overflow, fixed offsets like
+   finduser-btn's margin-left need to go away). */
+@media (max-width: 480px) {
+  body {
+    font-size: 13px;
+  }
+
+  .container,
+  .navbar {
+    max-width: calc(100% - 16px);
+  }
+
+  /* At this width logo and auth naturally wrap to their own
+     rows via .navbar-top's flex-wrap; just tune alignment
+     and size for the narrow stacked case. */
+  .navbar-inner {
+    width: 100%;
+  }
+
+  .logo-img {
+    width: 200px;
+  }
+
+  .navbar-auth {
+    text-align: left;
+    width: 100%;
+  }
+
+  .flag-img {
+    margin-left: 0;
+  }
+
+  .navbar-links-bar {
+    padding: 4px;
+  }
+
+  .navbar-links li a {
+    padding: 6px 6px;
+    font-size: 12px;
+  }
+
+  .search-box {
+    width: 100px;
+  }
+
+  .blog-title {
+    font-size: 19px;
+  }
+
+  .blog-content {
+    padding-left: 10px;
+    font-size: 14px;
+  }
+
+  .blog-content h1 {
+    font-size: 24px;
+  }
+
+  .blog-content h2 {
+    font-size: 20px;
+  }
+
+  /* Table scroll behavior now lives in the base .blog-content table
+     rule above, applied at all widths, not just under 480px. */
+
+  .blog-footer-right {
+    gap: 10px;
+  }
+
+  .sidebar-table th,
+  .sidebar-table td {
+    padding: 3px 4px;
+    font-size: 12px;
+  }
+
+  .finduser-input {
+    width: 100%;
+  }
+
+  /* This was a fixed 58px offset assuming a wide sidebar;
+     on a full-width-but-still-narrow mobile sidebar it pushed
+     the button off-center. Let it sit naturally instead. */
+  .finduser-btn {
+    margin-left: 0;
+  }
 }

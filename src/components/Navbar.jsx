@@ -27,11 +27,11 @@ function Navbar() {
           <li><Link to="/catalog">CATALOG</Link></li>
           <li><Link to="/contests">CONTESTS</Link></li>
           <li><Link to="/gym">GYM</Link></li>
-          <li><a href="https://codeforces.com/problemset" target="_blank" rel="noreferrer">PROBLEMSET</a></li>
-          <li><a href="https://codeforces.com/groups" target="_blank" rel="noreferrer">GROUPS</a></li>
-          <li><a href="https://codeforces.com/ratings" target="_blank" rel="noreferrer">RATING</a></li>
-          <li><a href="https://codeforces.com/edu/courses" target="_blank" rel="noreferrer">EDU</a></li>
-          <li><a href="https://codeforces.com/apiHelp" target="_blank" rel="noreferrer">API</a></li>
+          <li><Link to="/problemset">PROBLEMSET</Link></li>
+          <li><Link to="/groups">GROUPS</Link></li>
+          <li><Link to="/ratings">RATING</Link></li>
+          <li><Link to="/edu">EDU</Link></li>
+          <li><Link to="/api-help">API</Link></li>
           <li><Link to="/calendar">CALENDAR</Link></li>
           <li><Link to="/help">HELP</Link></li>
         </ul>

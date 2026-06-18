@@ -3,16 +3,13 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import flagImg from "../assets/flag.png";
 import "./HelpPage.css";
-
 const HELP_URL = "https://r.jina.ai/https://codeforces.com/help";
-
 function escapeHtml(text = "") {
   return text
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
 }
-
 function cleanMarkdown(text = "") {
   return text
     .replace(/\[(.*?)\]\((.*?)\)/g, "$1")
@@ -21,7 +18,6 @@ function cleanMarkdown(text = "") {
     .replace(/\s+/g, " ")
     .trim();
 }
-
 function inlineHtml(text = "") {
   return escapeHtml(text)
     .replace(
@@ -41,7 +37,6 @@ function inlineHtml(text = "") {
       '<a href="https://codeforces.com/terms" target="_blank" rel="noreferrer">read the license</a>'
     );
 }
-
 function stripJinaHeader(text = "") {
   return text
     .replace(/^Title:.*$/m, "")
@@ -50,10 +45,8 @@ function stripJinaHeader(text = "") {
     .replace(/\r/g, "")
     .trim();
 }
-
 function isChromeLine(line) {
   const clean = cleanMarkdown(line);
-
   const exact = new Set([
     "Enter | Register",
     "HOME",
@@ -69,7 +62,6 @@ function isChromeLine(line) {
     "CALENDAR",
     "HELP",
   ]);
-
   if (!clean || exact.has(clean)) return true;
   if (clean.startsWith("→ Pay attention")) return true;
   if (clean.startsWith("Before contest")) return true;
@@ -82,48 +74,38 @@ function isChromeLine(line) {
   if (clean.startsWith("# User Rating")) return true;
   if (clean.startsWith("# User Contrib.")) return true;
   if (/^\d+\s+\S+\s+-?\d+$/.test(clean)) return true;
-
   return false;
 }
-
 function parseNumberedQuestion(line) {
   const clean = cleanMarkdown(line);
   const match = clean.match(/^\d+\.\s+(.+)/);
   return match ? match[1].trim() : "";
 }
-
 function parseLiveHelp(text) {
   const lines = stripJinaHeader(text)
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => !isChromeLine(line));
-
   const titleIndex = lines.findIndex(
     (line) => cleanMarkdown(line) === "Frequently Asked Questions"
   );
-
   const byIndex = lines.findIndex((line) =>
     cleanMarkdown(line).startsWith("By MikeMirzayanov")
   );
-
   const introIndex = lines.findIndex((line) =>
     cleanMarkdown(line).startsWith(
       "This is the list of frequently asked questions concerning Codeforces work and answers to them."
     )
   );
-
   const qaIndex = lines.findIndex((line, index) => {
     if (index <= introIndex) return false;
     return /^#+\s*Questions and answers:?$/i.test(line) ||
       cleanMarkdown(line).toLowerCase() === "questions and answers:";
   });
-
   const fullIndexRaw = lines.findIndex((line) =>
     cleanMarkdown(line).startsWith("Full text and comments")
   );
-
   const fullIndex = fullIndexRaw === -1 ? lines.length : fullIndexRaw;
-
   const byLine = byIndex !== -1 ? cleanMarkdown(lines[byIndex]) : "";
   const author = byLine.match(/By\s+([A-Za-z0-9_.-]+)/)?.[1] || "MikeMirzayanov";
   const meta =
@@ -141,22 +123,17 @@ function parseLiveHelp(text) {
     introIndex !== -1 && qaIndex !== -1
       ? lines.slice(introIndex + 1, qaIndex)
       : [];
-
   const questions = questionListLines
     .map(parseNumberedQuestion)
     .filter(Boolean);
-
   const answerLines =
     qaIndex !== -1
       ? lines.slice(qaIndex + 1, fullIndex)
       : [];
-
   const answers = [];
   let current = null;
-
   answerLines.forEach((line) => {
     const question = parseNumberedQuestion(line);
-
     if (question) {
       if (current) answers.push(current);
       current = {
@@ -166,21 +143,16 @@ function parseLiveHelp(text) {
       };
       return;
     }
-
     if (!current) return;
-
     const clean = cleanMarkdown(line);
     if (!clean) return;
-
     if (/^[-*]\s+/.test(line)) {
       current.bullets.push(clean.replace(/^[-*]\s+/, ""));
     } else {
       current.paragraphs.push(clean);
     }
   });
-
   if (current) answers.push(current);
-
   return {
     title: titleIndex !== -1 ? cleanMarkdown(lines[titleIndex]) : "Frequently Asked Questions",
     author,
@@ -192,7 +164,6 @@ function parseLiveHelp(text) {
     comments: stripJinaHeader(text).match(/Comments\s+(\d+)/i)?.[1] || "",
   };
 }
-
 function AnswerItem({ answer, index }) {
   return (
     <li id={`q${index + 1}`}>
@@ -220,7 +191,6 @@ function AnswerItem({ answer, index }) {
     </li>
   );
 }
-
 export default function HelpPage() {
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);

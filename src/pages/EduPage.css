@@ -1,0 +1,216 @@
+.edu-page {
+  width: 1123px;
+  max-width: 1123px;
+  margin: 42px auto 0;
+}
+
+.edu-layout {
+  display: grid;
+  grid-template-columns: 824px 263px;
+  gap: 13px;
+  align-items: start;
+}
+
+.edu-main {
+  width: 824px;
+}
+
+.edu-title {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 16px;
+  color: #000;
+}
+
+.edu-box {
+  width: 824px;
+  border: 1px solid #d5d5d5;
+  border-radius: 4px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.edu-box-caption {
+  height: 23px;
+  line-height: 23px;
+  padding: 0 5px;
+  background: #dedede;
+  color: #000;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.edu-search-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+}
+
+.edu-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+}
+
+.edu-table th,
+.edu-table td {
+  border: 1px solid #d5d5d5;
+  padding: 6px 10px;
+  vertical-align: middle;
+  background: #fff;
+  color: #000;
+}
+
+.edu-table th {
+  background: #f8f8f8;
+  text-align: center;
+  font-weight: bold;
+}
+
+.edu-table th:nth-child(1),
+.edu-table td:nth-child(1) {
+  width: 48px;
+  text-align: center;
+}
+
+.edu-table th:nth-child(2),
+.edu-table td:nth-child(2) {
+  width: 560px;
+}
+
+.edu-table th:nth-child(3),
+.edu-table td:nth-child(3) {
+  width: 103px;
+  text-align: center;
+}
+
+.edu-table th:nth-child(4),
+.edu-table td:nth-child(4) {
+  width: 113px;
+  text-align: center;
+}
+
+.edu-table td:nth-child(2) {
+  line-height: 1.25;
+}
+
+.edu-table td:nth-child(2) b,
+.edu-table td:nth-child(2) strong,
+.edu-table td:nth-child(2) a:first-child {
+  color: #000;
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.edu-table a {
+  color: #0000cc;
+}
+
+.edu-table img {
+  width: 16px;
+  height: auto;
+  vertical-align: middle;
+}
+
+.edu-sidebar {
+  width: 263px;
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.edu-sidebox {
+  width: 263px;
+  border: 1px solid #b9b9b9;
+  border-radius: 4px 4px 0 0;
+  background: #fff;
+  margin: 0 0 20px;
+  overflow: hidden;
+}
+
+.edu-sidebox .caption {
+  display: block;
+  margin: 0;
+  padding: 4px 8px;
+  color: #334f86;
+  background: #fafafa;
+  border-bottom: 1px solid #c8c8c8;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  line-height: 1.1;
+  font-weight: bold;
+}
+
+.edu-sidebox > div:not(.caption) {
+  padding: 9px 10px;
+}
+
+.edu-sidebox p {
+  margin: 0 0 10px;
+}
+
+.edu-sidebox a {
+  color: #0000cc;
+}
+
+.edu-sidebox img {
+  display: block;
+  max-width: 220px;
+  height: auto;
+  margin: 12px auto 2px;
+}
+
+.edu-loading,
+.edu-error {
+  padding: 12px 0;
+  font-size: 14px;
+}
+
+.edu-error {
+  color: #c00020;
+}
+
+@media (max-width: 1150px) {
+  .edu-page {
+    width: calc(100% - 40px);
+    max-width: calc(100% - 40px);
+  }
+
+  .edu-layout {
+    grid-template-columns: minmax(0, 1fr) 263px;
+  }
+
+  .edu-main,
+  .edu-box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .edu-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .edu-sidebar,
+  .edu-sidebox {
+    width: 100%;
+  }
+}
+.edu-table td:nth-child(4) img {
+  display: none !important;
+}
+
+.edu-table td:nth-child(4) a[href*="/edu/course/"]::after {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 3px;
+  vertical-align: -3px;
+  background-image: url("https://codeforces.com/s/0/images/icons/user.png");
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+}

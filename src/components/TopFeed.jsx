@@ -1,23 +1,19 @@
 import { useEffect, useState } from "react";
 import "./TopFeed.css";
-
 const CF = "https://codeforces.com";
 const DEFAULT_AVATAR = "https://userpic.codeforces.org/no-title.jpg";
-
-// ─── Helpers ────────────────────────────────────────
 function stripHtml(html = "") {
   try {
     return new DOMParser().parseFromString(html, "text/html").body.textContent.trim();
-  } catch { return html.replace(/<[^>]*>/g, "").trim(); }
+  } 
+  catch { return html.replace(/<[^>]*>/g, "").trim(); }
 }
-
 function absUrl(url = "") {
   if (!url) return "";
   if (url.startsWith("//")) return `https:${url}`;
   if (url.startsWith("/")) return `${CF}${url}`;
   return url;
 }
-
 function fixHtml(html = "") {
   try {
     const doc = new DOMParser().parseFromString(
@@ -32,9 +28,9 @@ function fixHtml(html = "") {
       a.setAttribute("rel", "noreferrer");
     });
     return doc.body.innerHTML;
-  } catch { return ""; }
+  } 
+  catch { return ""; }
 }
-
 function getRatingClass(r) {
   if (r >= 3000) return "rating-legendary";
   if (r >= 2400) return "rating-red";
@@ -45,7 +41,6 @@ function getRatingClass(r) {
   if (r >= 1200) return "rating-green";
   return "rating-gray";
 }
-
 function timeAgo(unix) {
   const d = Math.max(0, Math.floor(Date.now() / 1000) - unix);
   if (d < 60) return `${d} seconds ago`;
@@ -54,16 +49,12 @@ function timeAgo(unix) {
   if (d < 604800) return `${Math.floor(d / 86400)} days ago`;
   return `${Math.floor(d / 604800)} weeks ago`;
 }
-
-// ─── Fetch helpers ───────────────────────────────────
 async function fetchText(url) {
   const r = await fetch(url, { cache: "no-store" });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return r.text();
 }
-
 async function cfApi(endpoint, params = {}) {
-  // Use /api proxy (Vite proxies /api → codeforces.com/api) to avoid CORS
   const url = new URL(`/api/${endpoint}`, window.location.origin);
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
   const r = await fetch(url.toString(), { cache: "no-store" });
@@ -72,25 +63,19 @@ async function cfApi(endpoint, params = {}) {
   if (d.status !== "OK") throw new Error(d.comment || "CF API error");
   return d.result;
 }
-
-// ─── Parse /top HTML ─────────────────────────────────
 function parseTopPage(html) {
   const doc = new DOMParser().parseFromString(html, "text/html");
   const topics = [...doc.querySelectorAll("div.topic")];
-
   return topics.map((t) => {
     const titleLink =
       t.querySelector("div.title a[href*='/blog/entry/']") ||
       t.querySelector("a[href*='/blog/entry/']");
     if (!titleLink) return null;
-
     const href = absUrl(titleLink.getAttribute("href"));
     const idMatch = href.match(/\/blog\/entry\/(\d+)/);
     if (!idMatch) return null;
     const id = Number(idMatch[1]);
     const title = stripHtml(titleLink.innerHTML);
-
-    // Author
     const infoEl = t.querySelector(".info, .date, .entry-info");
     const authorLink = infoEl
       ? infoEl.querySelector("a[href*='/profile/']")
@@ -98,21 +83,15 @@ function parseTopPage(html) {
     const authorHandle = authorLink
       ? decodeURIComponent((authorLink.getAttribute("href").match(/\/profile\/([^/?#]+)/) || [])[1] || "")
       : "";
-
-    // Tags
     const tags = [];
     infoEl?.querySelectorAll("a[href*='/tag/']").forEach((a) => {
       const tag = a.textContent.trim();
       if (tag) tags.push({ label: tag, href: absUrl(a.getAttribute("href")) });
     });
-
-    // Time
     const infoText = infoEl ? infoEl.textContent.replace(/\s+/g, " ").trim() : "";
     const timeMatch =
       infoText.match(/(\d+\s+(?:second|minute|hour|day|week|month|year)s?\s+ago)/i);
     const timeText = timeMatch ? timeMatch[1] : "";
-
-    // Vote score — scan the whole card for the first +N pattern
     let rating = 0;
     const plusEl = t.querySelector("span.plus");
     const minusEl = t.querySelector("span.minus");
@@ -122,8 +101,6 @@ function parseTopPage(html) {
       const m = t.textContent.match(/\+(\d+)/);
       if (m) rating = parseInt(m[1], 10);
     }
-
-    // Comments count
     let commentsCount = 0;
     t.querySelectorAll("a").forEach((a) => {
       const h = a.getAttribute("href") || "";
@@ -136,48 +113,20 @@ function parseTopPage(html) {
       const m = t.textContent.match(/(\d+)\s*comment/i);
       if (m) commentsCount = parseInt(m[1], 10);
     }
-
-    // Preview
     const contentEl =
       t.querySelector(".ttypography") ||
       t.querySelector(".content") ||
       t.querySelector(".topic-content");
     const content = contentEl ? fixHtml(contentEl.innerHTML) : "";
-
     return { id, title, authorHandle, rating, commentsCount, timeText, content, tags };
   }).filter(Boolean);
 }
-
-// ─── Parse /topComments HTML ─────────────────────────
-// Real CF structure (confirmed from live HTML):
-// <table class="comment-table">
-//   <tr>
-//     <td>  ← avatar column
-//       <div class="avatar">
-//         <a href="/profile/HANDLE"><img src="..."></a>
-//         <div><a class="rated-user">HANDLE</a></div>
-//       </div>
-//     </td>
-//     <td>  ← content column
-//       <div class="info">
-//         <div>On <a href="/profile/SOURCE_AUTHOR">SOURCE</a> → <a href="/blog/entry/ID#comment-N">TITLE</a>, <span class="format-humantime">X hours ago</span></div>
-//         <div style="position:absolute;right:0;top:0;">
-//           <span commentid="N"><span style="color:green">+47</span></span>
-//         </div>
-//       </div>
-//       <div class="ttypography">...comment body...</div>
-//     </td>
-//   </tr>
-// </table>
 function parseTopCommentsHtml(html) {
   if (!html || html.includes("Just a moment") || html.includes("cf-challenge")) return [];
   const doc = new DOMParser().parseFromString(html, "text/html");
-
   const tables = [...doc.querySelectorAll("table.comment-table")];
   console.log("[topComments] comment-table count:", tables.length);
-
   return tables.slice(0, 30).map((table, index) => {
-    // ── Avatar + author handle (left td) ──
     const avatarImg = table.querySelector(".avatar img");
     const avatarUrl = absUrl(avatarImg?.getAttribute("src") || "") || DEFAULT_AVATAR;
     const authorLink = table.querySelector(".avatar a.rated-user") ||
@@ -185,34 +134,21 @@ function parseTopCommentsHtml(html) {
     const authorHandle = decodeURIComponent(
       (authorLink?.getAttribute("href")?.match(/\/profile\/([^/?#]+)/) || [])[1] || ""
     );
-
-    // ── Info div: "On SOURCE_AUTHOR → TITLE, time" ──
     const infoDiv = table.querySelector(".info");
-
-    // Source author — first rated-user link inside info
     const sourceAuthorLink = infoDiv?.querySelector('a[href*="/profile/"]');
     const sourceAuthorHandle = decodeURIComponent(
       (sourceAuthorLink?.getAttribute("href")?.match(/\/profile\/([^/?#]+)/) || [])[1] || ""
     );
-
-    // Blog title + URL
     const blogLink = infoDiv?.querySelector('a[href*="/blog/entry/"]');
     const sourceTitle = stripHtml(blogLink?.innerHTML || "Blog entry");
     const sourceUrl = absUrl(blogLink?.getAttribute("href") || "");
-
-    // Time
     const timeEl = infoDiv?.querySelector(".format-humantime");
     const timeText = timeEl?.textContent?.trim() || "";
-
-    // ── Score — inside span[commentid] ──
     const scoreSpan = table.querySelector("span[commentid] span");
     const scoreText = scoreSpan?.textContent?.trim() || "0";
     const rating = parseInt(scoreText.replace(/[^0-9\-+]/g, ""), 10) || 0;
-
-    // ── Comment body ──
     const bodyEl = table.querySelector(".ttypography");
     const content = bodyEl ? fixHtml(bodyEl.innerHTML) : "";
-
     return {
       id: `${authorHandle}-${index}`,
       authorHandle,
@@ -226,15 +162,12 @@ function parseTopCommentsHtml(html) {
     };
   }).filter((c) => c.authorHandle);
 }
-
 async function fetchTopComments() {
   const html = await fetchText("/cf/topComments?locale=en&mobile=false");
   const parsed = parseTopCommentsHtml(html);
   if (!parsed.length) throw new Error("No comments found");
   return parsed;
 }
-
-// ─── User info ───────────────────────────────────────
 async function fetchUserInfo(handles) {
   const uniq = [...new Set(handles.filter(Boolean))];
   if (!uniq.length) return { ratings: {}, avatars: {} };
@@ -254,8 +187,6 @@ async function fetchUserInfo(handles) {
   }
   return { ratings, avatars };
 }
-
-// ─── Sub-components ──────────────────────────────────
 function Handle({ handle, rating, avatarUrl }) {
   if (!handle) return null;
   return (
@@ -266,12 +197,10 @@ function Handle({ handle, rating, avatarUrl }) {
     </a>
   );
 }
-
 function BlogCard({ blog, ratings, avatars }) {
   const score = blog.rating;
   const userRating = ratings[blog.authorHandle] || 0;
   const avatarUrl = avatars[blog.authorHandle];
-
   return (
     <article className="tf-blog-card">
       <h3 className="tf-blog-title">
@@ -331,7 +260,6 @@ function BlogCard({ blog, ratings, avatars }) {
     </article>
   );
 }
-
 function CommentCard({ comment, ratings, avatars }) {
   const authorRating = ratings[comment.authorHandle] || 0;
   const sourceRating = ratings[comment.sourceAuthorHandle] || 0;
@@ -362,7 +290,6 @@ function CommentCard({ comment, ratings, avatars }) {
     </article>
   );
 }
-
 function Spinner({ label }) {
   return (
     <div className="tf-spinner-row">
@@ -370,32 +297,23 @@ function Spinner({ label }) {
     </div>
   );
 }
-
-// ─── Main component ──────────────────────────────────
 export default function TopFeed() {
   const [tab, setTab] = useState("posts");
-
   const [blogs, setBlogs] = useState([]);
   const [blogsState, setBlogsState] = useState("loading");
   const [blogsErr, setBlogsErr] = useState("");
-
   const [comments, setComments] = useState([]);
   const [commState, setCommState] = useState("idle");
   const [commErr, setCommErr] = useState("");
-
   const [ratings, setRatings] = useState({});
   const [avatars, setAvatars] = useState({});
-
   function mergeUsers({ ratings: r, avatars: a }) {
     if (r) setRatings((p) => ({ ...p, ...r }));
     if (a) setAvatars((p) => ({ ...p, ...a }));
   }
-
-  // Load blogs via /cf/top HTML scrape
   useEffect(() => {
     let dead = false;
     setBlogsState("loading");
-
     fetchText("/cf/top?locale=en&mobile=false")
       .then((html) => {
         console.log("[top] HTML length:", html.length, "snippet:", html.slice(0, 200));
@@ -415,15 +333,11 @@ export default function TopFeed() {
 
     return () => { dead = true; };
   }, []);
-
-  // Load comments when tab opens
   useEffect(() => {
     if (tab !== "comments") return;
     if (commState !== "idle") return;
-
     setCommState("loading");
     let dead = false;
-
     fetchTopComments()
       .then((parsed) => {
         if (dead) return;
@@ -439,8 +353,7 @@ export default function TopFeed() {
       });
 
     return () => { dead = true; };
-  }, [tab]); // eslint-disable-line react-hooks/exhaustive-deps
-
+  }, [tab]); 
   return (
     <div className="tf-feed">
       <div className="tf-tabs">
@@ -449,7 +362,6 @@ export default function TopFeed() {
         <button type="button" className={`tf-tab ${tab === "comments" ? "active" : ""}`}
           onClick={() => setTab("comments")}>COMMENTS</button>
       </div>
-
       {tab === "posts" && (
         <section>
           <h2 className="tf-section-title">Top Recent Blog Posts</h2>
@@ -465,7 +377,6 @@ export default function TopFeed() {
           ))}
         </section>
       )}
-
       {tab === "comments" && (
         <section>
           <h2 className="tf-section-title">Top Comments</h2>

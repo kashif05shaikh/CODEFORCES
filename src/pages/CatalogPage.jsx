@@ -1,7 +1,6 @@
 import Navbar from "../components/Navbar";
 import CatalogFeed from "../components/CatalogFeed";
 import "../App.css";
-
 function CatalogPage() {
   return (
     <div>
@@ -13,5 +12,4 @@ function CatalogPage() {
     </div>
   );
 }
-
 export default CatalogPage;

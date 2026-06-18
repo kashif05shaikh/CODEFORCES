@@ -2,9 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ContestFeed.css";
 
-const CF_API = "https://corsproxy.io/?url=https://codeforces.com/api/contest.list";
-const CF_PAGE = "https://corsproxy.io/?url=https://codeforces.com/contests/page/";
-const USERS_API = "https://corsproxy.io/?url=https://codeforces.com/api/user.info?handles=";
 const REFRESH_MS = 5 * 60 * 1000;
 const PAGE_SIZE = 50;
 const TOTAL_SLIDES = 21;
@@ -24,7 +21,6 @@ function ratingColor(rating) {
   if (rating >= 1200) return "#008000";
   return "#808080";
 }
-
 function formatDate(unixSeconds) {
   if (!unixSeconds) return "-";
   const local = new Date(unixSeconds * 1000 + 330 * 60 * 1000);
@@ -33,13 +29,11 @@ function formatDate(unixSeconds) {
   const mm = String(local.getUTCMinutes()).padStart(2, "0");
   return `${months[local.getUTCMonth()]}/${String(local.getUTCDate()).padStart(2, "0")}/${local.getUTCFullYear()} ${hh}:${mm}UTC+5.5`;
 }
-
 function formatDuration(seconds = 0) {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
-
 function formatCountdown(seconds) {
   if (seconds <= 0) return "Started";
   const d = Math.floor(seconds / 86400);
@@ -49,7 +43,6 @@ function formatCountdown(seconds) {
   if (d > 0) return `${d} day${d > 1 ? "s" : ""} ${h}h`;
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
-
 function useCountdown(targetUnix) {
   const [remaining, setRemaining] = useState(() => targetUnix - Math.floor(Date.now() / 1000));
   useEffect(() => {
@@ -58,7 +51,6 @@ function useCountdown(targetUnix) {
   }, [targetUnix]);
   return remaining;
 }
-
 function matchesType(contest, selected) {
   if (!selected.length) return true;
   const name = contest.name;
@@ -72,55 +64,53 @@ function matchesType(contest, selected) {
     return lower.includes(type.toLowerCase());
   });
 }
-
 function parseContestPage(html) {
   const doc = new DOMParser().parseFromString(html, "text/html");
   const map = {};
-
   Array.from(doc.querySelectorAll("tr")).forEach((row) => {
-    const contestLink = Array.from(row.querySelectorAll("a[href]")).find((a) => /\/contest\/\d+/.test(a.getAttribute("href") || ""));
+    const contestLink = Array.from(row.querySelectorAll("a[href]")).find(
+      (a) => /\/contest\/\d+/.test(a.getAttribute("href") || "")
+    );
     const id = contestLink?.getAttribute("href")?.match(/\/contest\/(\d+)/)?.[1];
     if (!id) return;
-
     const cells = Array.from(row.children);
     const writerCell = cells[1];
     const handles = writerCell
-      ? Array.from(writerCell.querySelectorAll('a[href*="/profile/"]')).map((a) => a.textContent.trim()).filter(Boolean)
+      ? Array.from(writerCell.querySelectorAll('a[href*="/profile/"]'))
+          .map((a) => a.textContent.trim())
+          .filter(Boolean)
       : [];
-
-    const participantLink = Array.from(row.querySelectorAll("a[href]")).find((a) => /^x\d+/.test(a.textContent.trim()));
-
-    map[id] = {
-      _writers: handles,
-      _participants: participantLink?.textContent.trim() || "",
-    };
+    const participantLink = Array.from(row.querySelectorAll("a[href]")).find((a) =>
+      /^x\d+/.test(a.textContent.trim())
+    );
+    map[id] = { _writers: handles, _participants: participantLink?.textContent.trim() || "" };
   });
-
   return map;
 }
-
 async function loadLivePageDetails() {
-  const pages = Array.from({ length: TOTAL_SLIDES }, (_, i) => i + 1);
+  const pages = [1, 2, 3, 4, 5];
   const results = await Promise.allSettled(
     pages.map(async (page) => {
-      const res = await fetch(`${CF_PAGE}${page}`);
-      if (!res.ok) throw new Error(`page ${page}`);
+      const res = await fetch(`/cf/contests/page/${page}`, {
+        signal: AbortSignal.timeout(10000),
+      });
+      if (!res.ok) throw new Error(`page ${page} failed`);
       return parseContestPage(await res.text());
     })
   );
-
-  return results.reduce((acc, item) => item.status === "fulfilled" ? { ...acc, ...item.value } : acc, {});
+  return results.reduce(
+    (acc, item) => (item.status === "fulfilled" ? { ...acc, ...item.value } : acc),
+    {}
+  );
 }
-
 function TypeDropdown({ selected, onChange }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
-  const label = selected.length === 0 ? "Any" : selected.length === 1 ? selected[0] : `${selected.length} selected`;
+  const label =
+    selected.length === 0 ? "Any" : selected.length === 1 ? selected[0] : `${selected.length} selected`;
 
   useEffect(() => {
-    const close = (e) => {
-      if (!ref.current?.contains(e.target)) setOpen(false);
-    };
+    const close = (e) => { if (!ref.current?.contains(e.target)) setOpen(false); };
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
   }, []);
@@ -147,7 +137,6 @@ function TypeDropdown({ selected, onChange }) {
     </div>
   );
 }
-
 function WritersCell({ handles, userMap }) {
   if (!handles?.length) return <td className="cf-td-writers">—</td>;
   return (
@@ -156,8 +145,12 @@ function WritersCell({ handles, userMap }) {
         const info = userMap[h];
         return (
           <div key={h}>
-            <a href={`https://codeforces.com/profile/${h}`} target="_blank" rel="noreferrer"
-              style={{ color: ratingColor(info?.rating), fontWeight: "bold", fontSize: 11, textDecoration: "none" }}>
+            <a
+              href={`https://codeforces.com/profile/${h}`}
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: ratingColor(info?.rating), fontWeight: "bold", fontSize: 11, textDecoration: "none" }}
+            >
               {h}
             </a>
           </div>
@@ -166,11 +159,9 @@ function WritersCell({ handles, userMap }) {
     </td>
   );
 }
-
 function PayCountdown({ startTime }) {
   return <span>{formatCountdown(Math.max(0, useCountdown(startTime)))}</span>;
 }
-
 function UpcomingRow({ contest, onNavigate, userMap }) {
   const remaining = useCountdown(contest.startTimeSeconds);
   return (
@@ -180,8 +171,12 @@ function UpcomingRow({ contest, onNavigate, userMap }) {
       </td>
       <WritersCell handles={contest._writers} userMap={userMap} />
       <td className="cf-td-start">
-        <button className="cf-start-blue" onClick={() => onNavigate(contest.id)}>{formatDate(contest.startTimeSeconds)}</button>
-        <div className="cf-before-txt">{remaining <= 0 ? "Contest is running" : `Before start ${formatCountdown(remaining)}`}</div>
+        <button className="cf-start-blue" onClick={() => onNavigate(contest.id)}>
+          {formatDate(contest.startTimeSeconds)}
+        </button>
+        <div className="cf-before-txt">
+          {remaining <= 0 ? "Contest is running" : `Before start ${formatCountdown(remaining)}`}
+        </div>
       </td>
       <td className="cf-td-len">{formatDuration(contest.durationSeconds)}</td>
       <td className="cf-td-reg">
@@ -191,7 +186,6 @@ function UpcomingRow({ contest, onNavigate, userMap }) {
     </tr>
   );
 }
-
 function PastRow({ contest, onNavigate, userMap }) {
   return (
     <tr className="cf-past-row">
@@ -212,7 +206,6 @@ function PastRow({ contest, onNavigate, userMap }) {
     </tr>
   );
 }
-
 export default function ContestFeed() {
   const navigate = useNavigate();
   const [upcoming, setUpcoming] = useState([]);
@@ -230,30 +223,52 @@ export default function ContestFeed() {
   const load = useCallback(async () => {
     try {
       setError("");
-      const [res, liveDetails] = await Promise.all([
-        fetch(`${CF_API}?gym=false`),
-        loadLivePageDetails().catch(() => ({})),
-      ]);
-
+      setLoading(true);
+      const res = await fetch(`/api/contest.list?gym=false`, {
+        signal: AbortSignal.timeout(12000),
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       if (data.status !== "OK") throw new Error(data.comment || "API error");
+      const all = data.result.map((c) => ({ ...c, _writers: [], _participants: "" }));
+      setUpcoming(
+        all.filter((c) => c.phase === "BEFORE" || c.phase === "CODING")
+           .sort((a, b) => a.startTimeSeconds - b.startTimeSeconds)
+      );
+      setPast(
+        all.filter((c) => c.phase === "FINISHED")
+           .sort((a, b) => b.startTimeSeconds - a.startTimeSeconds)
+      );
+      loadLivePageDetails()
+        .then((liveDetails) => {
+          if (!Object.keys(liveDetails).length) return;
+          setUpcoming((prev) =>
+            prev.map((c) => ({ ...c, ...(liveDetails[String(c.id)] || {}) }))
+          );
+          setPast((prev) =>
+            prev.map((c) => ({ ...c, ...(liveDetails[String(c.id)] || {}) }))
+          );
+          const handles = [
+            ...new Set(Object.values(liveDetails).flatMap((d) => d._writers || [])),
+          ].slice(0, 500);
 
-      const all = data.result.map((c) => ({ ...c, ...(liveDetails[String(c.id)] || {}) }));
+          if (handles.length) {
+            fetch(`/api/user.info?handles=${handles.join(";")}`, {
+              signal: AbortSignal.timeout(10000),
+            })
+              .then((r) => r.json())
+              .then((ud) => {
+                if (ud.status === "OK") {
+                  setUserMap(Object.fromEntries(ud.result.map((u) => [u.handle, u])));
+                }
+              })
+              .catch(() => {});
+          }
+        })
+        .catch(() => {});
 
-      setUpcoming(all.filter((c) => c.phase === "BEFORE" || c.phase === "CODING").sort((a, b) => a.startTimeSeconds - b.startTimeSeconds));
-      setPast(all.filter((c) => c.phase === "FINISHED").sort((a, b) => b.startTimeSeconds - a.startTimeSeconds));
-
-      const handles = [...new Set(all.flatMap((c) => c._writers || []))].slice(0, 500);
-      if (handles.length) {
-        const ur = await fetch(`${USERS_API}${handles.join(";")}`);
-        const ud = await ur.json();
-        if (ud.status === "OK") {
-          setUserMap(Object.fromEntries(ud.result.map((u) => [u.handle, u])));
-        }
-      }
     } catch (err) {
-      setError(`Failed to load: ${err.message}`);
+      setError(`Failed to load contests: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -270,7 +285,9 @@ export default function ContestFeed() {
     if (contestTypes.length) result = result.filter((c) => matchesType(c, contestTypes));
     if (substring.trim()) {
       const s = substring.trim().toLowerCase();
-      result = result.filter((c) => c.name.toLowerCase().includes(s) || (c._writers || []).join(" ").toLowerCase().includes(s));
+      result = result.filter(
+        (c) => c.name.toLowerCase().includes(s) || (c._writers || []).join(" ").toLowerCase().includes(s)
+      );
     }
     return result.slice(0, TOTAL_SLIDES * PAGE_SIZE);
   }, [past, contestTypes, substring]);
@@ -290,23 +307,64 @@ export default function ContestFeed() {
         {error && <div className="cf-error">{error} <button onClick={load}>Retry</button></div>}
 
         <div className="cf-box">
-          <div className="cf-box-head"><span>Current or upcoming contests</span><span className="cf-head-icon">⌕</span></div>
+          <div className="cf-box-head">
+            <span>Current or upcoming contests</span>
+            <span className="cf-head-icon">⌕</span>
+          </div>
           <table className="cf-table">
-            <thead><tr><th className="cf-th-name">Name</th><th className="cf-th-writers">Writers</th><th className="cf-th-start">Start</th><th className="cf-th-len">Length</th><th className="cf-th-reg"></th></tr></thead>
-            <tbody>{upcoming.length ? upcoming.slice(0, 4).map((c) => <UpcomingRow key={c.id} contest={c} onNavigate={goToContest} userMap={userMap} />) : <tr><td colSpan={5} className="cf-empty">No upcoming contests</td></tr>}</tbody>
+            <thead>
+              <tr>
+                <th className="cf-th-name">Name</th>
+                <th className="cf-th-writers">Writers</th>
+                <th className="cf-th-start">Start</th>
+                <th className="cf-th-len">Length</th>
+                <th className="cf-th-reg"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {upcoming.length
+                ? upcoming.slice(0, 4).map((c) => (
+                    <UpcomingRow key={c.id} contest={c} onNavigate={goToContest} userMap={userMap} />
+                  ))
+                : <tr><td colSpan={5} className="cf-empty">No upcoming contests</td></tr>}
+            </tbody>
           </table>
         </div>
 
         <div className="cf-box cf-past-box">
-          <div className="cf-box-head"><span>Past contests <span className="cf-head-icon2">☰</span></span><span className="cf-head-count">{filtered.length} contests</span></div>
+          <div className="cf-box-head">
+            <span>Past contests <span className="cf-head-icon2">☰</span></span>
+            <span className="cf-head-count">{filtered.length} contests</span>
+          </div>
           <table className="cf-table">
-            <thead><tr><th className="cf-th-name">Name</th><th className="cf-th-writers">Writers</th><th className="cf-th-start">Start</th><th className="cf-th-len">Length</th><th className="cf-th-reg"></th></tr></thead>
-            <tbody>{shown.length ? shown.map((c) => <PastRow key={c.id} contest={c} onNavigate={goToContest} userMap={userMap} />) : <tr><td colSpan={5} className="cf-empty">No contests found</td></tr>}</tbody>
+            <thead>
+              <tr>
+                <th className="cf-th-name">Name</th>
+                <th className="cf-th-writers">Writers</th>
+                <th className="cf-th-start">Start</th>
+                <th className="cf-th-len">Length</th>
+                <th className="cf-th-reg"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {shown.length
+                ? shown.map((c) => (
+                    <PastRow key={c.id} contest={c} onNavigate={goToContest} userMap={userMap} />
+                  ))
+                : <tr><td colSpan={5} className="cf-empty">No contests found</td></tr>}
+            </tbody>
           </table>
           <div className="cf-slides">
             <button disabled={slide === 1} onClick={() => setSlide(slide - 1)}>‹</button>
             {Array.from({ length: TOTAL_SLIDES }, (_, i) => i + 1).map((p) => (
-              <button key={p} disabled={p > slideCount} className={p === slide ? "is-active" : ""} onClick={() => setSlide(p)}>{p}</button>
+              <button
+                key={p}
+                disabled={p > slideCount}
+                className={p === slide ? "is-active" : ""}
+                onClick={() => setSlide(p)}
+              >
+                {p}
+              </button>
             ))}
             <button disabled={slide === slideCount} onClick={() => setSlide(slide + 1)}>›</button>
           </div>
@@ -319,9 +377,15 @@ export default function ContestFeed() {
             <div className="cf-sb-head">→ Pay attention</div>
             <div className="cf-sb-body cf-pay-body">
               <div className="cf-sb-label">Before contest</div>
-              <button className="cf-sb-name" onClick={() => goToContest(nextUpcoming.id)}>{nextUpcoming.name}</button>
-              <div className="cf-sb-countdown"><PayCountdown startTime={nextUpcoming.startTimeSeconds} /></div>
-              <button className="cf-sb-regnow" onClick={() => goToContest(nextUpcoming.id)}>Register now »</button>
+              <button className="cf-sb-name" onClick={() => goToContest(nextUpcoming.id)}>
+                {nextUpcoming.name}
+              </button>
+              <div className="cf-sb-countdown">
+                <PayCountdown startTime={nextUpcoming.startTimeSeconds} />
+              </div>
+              <button className="cf-sb-regnow" onClick={() => goToContest(nextUpcoming.id)}>
+                Register now »
+              </button>
             </div>
           </div>
         )}
@@ -329,10 +393,32 @@ export default function ContestFeed() {
         <div className="cf-sb-box cf-filter-box">
           <div className="cf-sb-head">→ Past contests filter</div>
           <div className="cf-sb-body">
-            <div className="cf-frow"><div className="cf-flabel">Contest type:</div><TypeDropdown selected={contestTypes} onChange={setContestTypes} /></div>
-            <div className="cf-frow"><div className="cf-flabel">Rated:</div><select className="cf-fselect" value={rated} onChange={(e) => setRated(e.target.value)}>{RATED_OPTIONS.map((x) => <option key={x}>{x}</option>)}</select></div>
-            <div className="cf-frow"><div className="cf-flabel">Tried:</div><select className="cf-fselect" value={tried} onChange={(e) => setTried(e.target.value)}>{TRIED_OPTIONS.map((x) => <option key={x}>{x}</option>)}</select></div>
-            <div className="cf-frow"><div className="cf-flabel">Substring:</div><input className="cf-finput" placeholder="In contest title and writers" value={pendingSubstring} onChange={(e) => setPendingSubstring(e.target.value)} onKeyDown={(e) => e.key === "Enter" && setSubstring(pendingSubstring)} /></div>
+            <div className="cf-frow">
+              <div className="cf-flabel">Contest type:</div>
+              <TypeDropdown selected={contestTypes} onChange={setContestTypes} />
+            </div>
+            <div className="cf-frow">
+              <div className="cf-flabel">Rated:</div>
+              <select className="cf-fselect" value={rated} onChange={(e) => setRated(e.target.value)}>
+                {RATED_OPTIONS.map((x) => <option key={x}>{x}</option>)}
+              </select>
+            </div>
+            <div className="cf-frow">
+              <div className="cf-flabel">Tried:</div>
+              <select className="cf-fselect" value={tried} onChange={(e) => setTried(e.target.value)}>
+                {TRIED_OPTIONS.map((x) => <option key={x}>{x}</option>)}
+              </select>
+            </div>
+            <div className="cf-frow">
+              <div className="cf-flabel">Substring:</div>
+              <input
+                className="cf-finput"
+                placeholder="In contest title and writers"
+                value={pendingSubstring}
+                onChange={(e) => setPendingSubstring(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && setSubstring(pendingSubstring)}
+              />
+            </div>
             <button className="cf-fbtn" onClick={() => setSubstring(pendingSubstring)}>Filter</button>
           </div>
         </div>
