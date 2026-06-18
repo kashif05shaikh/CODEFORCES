@@ -3,6 +3,14 @@
     {
       "source": "/api/:path*",
       "destination": "https://codeforces.com/api/:path*"
+    },
+    {
+      "source": "/cf/:path*",
+      "destination": "https://codeforces.com/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
