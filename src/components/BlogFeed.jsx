@@ -63,6 +63,7 @@ function BlogFeed() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [authorRatings, setAuthorRatings] = useState({});
+  const blogFeedUrl = import.meta.env.DEV ? "/cf/" : "/api/cf-scrape/";
 
   useEffect(() => {
     let cancelled = false;
@@ -74,7 +75,7 @@ function BlogFeed() {
       return;
     }
 
-    fetch("/cf/")
+    fetch(blogFeedUrl)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP_${res.status}`);
         return res.text();
